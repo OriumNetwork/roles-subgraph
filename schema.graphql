@@ -33,8 +33,6 @@ type Nft @entity(immutable: false) {
   currentOwner: Account!
   previousOwner: Account!
   originalOwner: Account!
-
-  lastOfferExpirationAt: BigInt!
 }
 
 type Account @entity(immutable: false) {
