@@ -29,10 +29,6 @@ export class Nft extends Entity {
     }
   }
 
-  static loadInBlock(id: string): Nft | null {
-    return changetype<Nft | null>(store.get_in_block("Nft", id));
-  }
-
   static load(id: string): Nft | null {
     return changetype<Nft | null>(store.get("Nft", id));
   }
@@ -153,19 +149,6 @@ export class Nft extends Entity {
   set originalOwner(value: string) {
     this.set("originalOwner", Value.fromString(value));
   }
-
-  get lastOfferExpirationAt(): BigInt {
-    let value = this.get("lastOfferExpirationAt");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set lastOfferExpirationAt(value: BigInt) {
-    this.set("lastOfferExpirationAt", Value.fromBigInt(value));
-  }
 }
 
 export class Account extends Entity {
@@ -186,10 +169,6 @@ export class Account extends Entity {
     }
   }
 
-  static loadInBlock(id: string): Account | null {
-    return changetype<Account | null>(store.get_in_block("Account", id));
-  }
-
   static load(id: string): Account | null {
     return changetype<Account | null>(store.get("Account", id));
   }
@@ -207,25 +186,12 @@ export class Account extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get nfts(): NftLoader {
-    return new NftLoader("Account", this.get("id")!.toString(), "nfts");
-  }
-}
-
-export class NftLoader extends Entity {
-  _entity: string;
-  _field: string;
-  _id: string;
-
-  constructor(entity: string, id: string, field: string) {
-    super();
-    this._entity = entity;
-    this._id = id;
-    this._field = field;
-  }
-
-  load(): Nft[] {
-    let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<Nft[]>(value);
+  get nfts(): Array<string> {
+    let value = this.get("nfts");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
   }
 }

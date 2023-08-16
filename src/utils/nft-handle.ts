@@ -44,7 +44,6 @@ export class NftHandle {
     entity.currentOwner = toAccount.id;
     entity.previousOwner = fromAccount.id;
     entity.originalOwner = toAccount.id;
-    entity.lastOfferExpirationAt = BigInt.zero();
     entity.save();
   }
 }
