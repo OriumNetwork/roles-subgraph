@@ -1,0 +1,25 @@
+{
+  "name": "RolesSubgraph",
+  "version": "1.0.0",
+  "author": "orium.network",
+  "license": "MIT",
+  "description": "A set of subgraphs (one for each network) for Orium Network dapps",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "graph-auth": "graph auth --product hosted-service",
+    "codegen-goerli": "cp addresses-goerli.ts src/utils/addresses.ts && cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph-goerli.yaml",
+    "build-goerli": "graph build subgraph-goerli.yaml",
+    "deploy-goerli": "graph deploy --node https://api.thegraph.com/deploy/ oriummgnt/orium-goerli",
+    "test-goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph test goerli"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.55.0"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-ts": "^0.31.0",
+    "@oriumnetwork/orium-commons": "^1.0.10"
+  }
+}
