@@ -1,4 +1,5 @@
-import { ethereum } from '@graphprotocol/graph-ts'
+/* eslint-disable @typescript-eslint/ban-types */
+import { BigInt, ethereum } from '@graphprotocol/graph-ts'
 import { Account, Nft } from '../../generated/schema'
 
 export class NftHandle {
@@ -12,7 +13,7 @@ export class NftHandle {
     this.platform = platform
   }
 
-  public handle(event: ethereum.Event, from: string, to: string, tokenId: bigint, id: string): void {
+  public handle(event: ethereum.Event, from: string, to: string, tokenId: BigInt, id: string): void {
     let entity = Nft.load(id)
     if (!entity) {
       entity = new Nft(id)
