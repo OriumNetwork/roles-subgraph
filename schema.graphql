@@ -1,34 +1,7 @@
-enum NftState {
-  NONE
-  CLOSED_PORTAL
-  OPENED_PORTAL
-  AAVEGOTCHI
-  AAVEGOTCHI_LAND
-  AVATAR
-  WAVATAR
-  SPACESHIP
-  WSPACESHIP
-}
-
-enum NftType {
-  AAVEGOTCHI
-  AAVEGOTCHI_LAND
-  NOVAAVATAR
-  WNOVAAVATAR
-  NOVASPACESHIP
-  WNOVASPACESHIP
-  TRAVELER
-  WTRAVELER
-  COMETHSPACESHIP
-}
-
 type Nft @entity(immutable: false) {
   id: ID!
   address: String!
-  state: NftState!
-  type: NftType!
   tokenId: BigInt!
-  platform: String!
 
   currentOwner: Account!
   previousOwner: Account!

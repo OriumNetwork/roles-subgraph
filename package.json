@@ -10,9 +10,9 @@
   },
   "scripts": {
     "graph-auth": "graph auth --product hosted-service",
-    "codegen-goerli": "cp addresses-goerli.ts src/utils/addresses.ts && cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph-goerli.yaml",
+    "codegen-goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph-goerli.yaml",
     "build-goerli": "graph build subgraph-goerli.yaml",
-    "deploy-goerli": "graph deploy --node https://api.thegraph.com/deploy/ oriummgnt/orium-goerli",
+    "deploy-goerli": "graph deploy --node https://api.thegraph.com/deploy/ oriummgnt/roles-registry-goerli",
     "test-goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph test goerli",
     "lint": "npx eslint src/",
     "lint-fix": "npx eslint src/ --fix && npx prettier --write .",

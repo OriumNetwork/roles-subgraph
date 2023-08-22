@@ -1,44 +1,33 @@
-import { assert, describe, test, newMockEvent } from 'matchstick-as'
-import { Address, BigInt, ethereum } from '@graphprotocol/graph-ts'
-import { Nft } from '../../../generated/schema'
-import { Transfer } from '../../../generated/Traveler/ChronosTraveler'
-import { generateId, handleTravelerTransfer } from '../../../src/chronos/traveler/handler'
+import { assert, describe, test, newMockEvent, beforeEach, afterEach, clearStore } from 'matchstick-as'
+import { handleTravelerTransfer } from '../../../src/chronos/traveler/handler'
+import { generateId } from '../../../src/utils/helper'
+import { createNewTransferEvent } from '../../mocks/events'
+import { createMockNft } from '../../mocks/entities'
+import { ZERO_ADDRESS } from '../../../src/utils/constants'
+
+const tokenId = '123'
+const address1 = '0x1111111111111111111111111111111111111111'
+const address2 = '0x2222222222222222222222222222222222222222'
 
 describe('When entities no exists', () => {
+  beforeEach(() => {
+    createMockNft(tokenId)
+  })
+
+  afterEach(() => {
+    clearStore()
+  })
+
   test('Should transfer currentOwner ownership', () => {
-    const nft = new Nft('1')
-    nft.address = '0x1'
-    nft.state = 'AVAILABLE'
-    nft.type = 'ERC721'
-    nft.tokenId = BigInt.fromI32(1)
-    nft.platform = 'OpenSea'
-    nft.currentOwner = '0x1111111111111111111111111111111111111111'
-    nft.previousOwner = '0x1'
-    nft.originalOwner = '0x1'
-    nft.save()
-
-    const event = changetype<Transfer>(newMockEvent())
-    event.parameters = new Array<ethereum.EventParam>()
-
-    event.parameters.push(
-      new ethereum.EventParam(
-        'from',
-        ethereum.Value.fromAddress(Address.fromString('0x1111111111111111111111111111111111111111')),
-      ),
-    )
-    event.parameters.push(
-      new ethereum.EventParam(
-        'to',
-        ethereum.Value.fromAddress(Address.fromString('0x2222222222222222222222222222222222222222')),
-      ),
-    )
-    event.parameters.push(new ethereum.EventParam('tokenId', ethereum.Value.fromI32(1)))
-
-    const eventId = generateId(event)
+    const event = createNewTransferEvent(address1, address2, tokenId, ZERO_ADDRESS)
+    const _id = generateId(event.params.tokenId.toString(), event.address.toHexString())
 
     handleTravelerTransfer(event)
 
-    assert.fieldEquals('Nft', eventId, 'previousOwner', '0x1111111111111111111111111111111111111111')
-    assert.fieldEquals('Nft', eventId, 'currentOwner', '0x2222222222222222222222222222222222222222')
+    assert.fieldEquals('Nft', _id, 'address', ZERO_ADDRESS)
+    assert.fieldEquals('Nft', _id, 'tokenId', '123')
+    assert.fieldEquals('Nft', _id, 'previousOwner', address1)
+    assert.fieldEquals('Nft', _id, 'currentOwner', address2)
+    assert.fieldEquals('Nft', _id, 'originalOwner', address2)
   })
 })
