@@ -6,3 +6,6 @@ generated/
 
 #tests
 tests/.latest.json
+
+#subgrahp
+subgraph.yaml
