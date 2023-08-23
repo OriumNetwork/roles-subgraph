@@ -1,5 +1,5 @@
 import { assert, describe, test, clearStore, afterAll, beforeAll } from 'matchstick-as'
-import { handleTravelerTransfer } from '../../../src/chronos/traveler/handler'
+import { handleTravelerTransfer } from '../../../src/chronos/traveler/transfer-handler'
 import { generateId } from '../../../src/utils/helper'
 import { createNewTransferEvent } from '../../mocks/events'
 import { ZERO_ADDRESS } from '../../../src/utils/constants'
