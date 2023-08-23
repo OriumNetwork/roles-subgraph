@@ -2,7 +2,6 @@ import { assert, describe, test, newMockEvent, beforeEach, afterEach, clearStore
 import { handleTravelerTransfer } from '../../../src/chronos/traveler/handler'
 import { generateId } from '../../../src/utils/helper'
 import { createNewTransferEvent } from '../../mocks/events'
-import { createMockNft } from '../../mocks/entities'
 import { ZERO_ADDRESS } from '../../../src/utils/constants'
 
 const tokenId = '123'
@@ -10,10 +9,6 @@ const address1 = '0x1111111111111111111111111111111111111111'
 const address2 = '0x2222222222222222222222222222222222222222'
 
 describe('When entities no exists', () => {
-  beforeEach(() => {
-    createMockNft(tokenId)
-  })
-
   afterEach(() => {
     clearStore()
   })
@@ -21,6 +16,8 @@ describe('When entities no exists', () => {
   test('Should transfer currentOwner ownership', () => {
     const event = createNewTransferEvent(address1, address2, tokenId, ZERO_ADDRESS)
     const _id = generateId(event.params.tokenId.toString(), event.address.toHexString())
+
+    assert.entityCount('Nft', 0)
 
     handleTravelerTransfer(event)
 
