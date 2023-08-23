@@ -1,0 +1,41 @@
+{
+  "name": "roles-subgraph",
+  "version": "1.0.0",
+  "author": "@OriumNetwork",
+  "license": "CC0-1.0",
+  "description": "A set of subgraphs (one for each network) for Orium Network dapps",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "graph-auth": "graph auth --product hosted-service",
+    "codegen-goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph.yaml",
+    "build-goerli": "graph build subgraph.yaml",
+    "deploy-goerli": "graph deploy --node https://api.thegraph.com/deploy/ orium-network/nft-roles-goerli",
+    "test-goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph test goerli",
+    "lint": "npx eslint src/",
+    "lint-fix": "npx eslint src/ --fix && npx prettier --write .",
+    "lint-staged": "npx lint-staged"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.55.0"
+  },
+  "devDependencies": {
+    "@graphprotocol/graph-ts": "^0.31.0",
+    "@oriumnetwork/orium-commons": "^1.0.10",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "matchstick-as": "^0.5.2",
+    "prettier": "^3.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-staged"
+    }
+  },
+  "eslintIgnore": [
+    "build/",
+    "generated/"
+  ]
+}
