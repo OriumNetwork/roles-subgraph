@@ -2,13 +2,10 @@ type Nft @entity(immutable: false) {
   id: ID!
   address: String!
   tokenId: BigInt!
-
-  currentOwner: Account!
-  previousOwner: Account!
-  originalOwner: Account!
+  owner: Account!
 }
 
 type Account @entity(immutable: false) {
   id: ID!
-  nfts: [Nft!]! @derivedFrom(field: "originalOwner")
+  nfts: [Nft!] @derivedFrom(field: "owner")
 }

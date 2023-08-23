@@ -29,8 +29,6 @@ export function handleTravelerTransfer(event: Transfer): void {
     fromAccount.save()
   }
 
-  entity.currentOwner = toAccount.id
-  entity.previousOwner = fromAccount.id
-  entity.originalOwner = toAccount.id
+  entity.owner = toAccount.id
   entity.save()
 }
