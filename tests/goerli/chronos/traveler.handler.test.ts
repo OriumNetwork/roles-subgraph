@@ -1,4 +1,4 @@
-import { assert, describe, test, clearStore, afterAll, beforeAll } from 'matchstick-as'
+import { assert, describe, test, clearStore, afterAll } from 'matchstick-as'
 import { handleTravelerTransfer } from '../../../src/chronos/traveler/transfer-handler'
 import { generateId } from '../../../src/utils/helper'
 import { createNewTransferEvent } from '../../mocks/events'
