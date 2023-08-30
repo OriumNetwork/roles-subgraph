@@ -22,8 +22,8 @@ dataSources:
         - name: ERC7432Roles
           file: ./abis/ERC7432Roles.json
       eventHandlers:
-        - event: RoleGranted(indexed bytes32,indexed address,indexed uint256, address, uint64, bytes)
+        - event: RoleGranted(indexed bytes32,indexed address,indexed uint256,address,uint64,bytes)
           handler: handleRoleGranted
-        - event: RoleRevoked(indexed bytes32,indexed address,indexed uint256, address)
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed uint256,address)
           handler: handleRoleRevoked
       file: ./src/erc7432/index.ts
