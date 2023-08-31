@@ -1,4 +1,4 @@
-import { log } from '@graphprotocol/graph-ts'
+import { BigInt, log } from '@graphprotocol/graph-ts'
 import { RoleRevoked } from '../../../generated/Roles/ERC7432Roles'
 import { Nft, Role } from '../../../generated/schema'
 import { generateId } from '../../utils/helper'
@@ -11,23 +11,27 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   const nft = Nft.load(nftId)
 
   if (!nft) {
-    log.info('NFT {} does not exist, skipping transfer...', [nftId])
+    log.warning('[handleRoleRevoked] NFT {} does not exist, skipping transfer...', [nftId])
     return
   }
 
   const nftOwner = nft.owner
 
   if (nftOwner != address) {
-    log.info('NFT {} is not owned by {}, skipping transfer...', [address])
+    log.warning('[handleRoleRevoked] NFT {} is not owned by {}, skipping transfer...', [address])
     return
   }
 
-  if (event.address!) let entity = Role.load(event.params._role.toHex())
+  const roleId = event.params._role.toHex()
+  const role = Role.load(roleId)
 
-  if (entity == null) {
-    entity = new Role(event.params._role.toHex())
+  if (!role) {
+    log.warning('[handleRoleRevoked] Role {} does not exist, skipping transfer...', [roleId])
+    return
   }
 
-  entity.account = event.params.account.toHex()
-  entity.save()
+  role.expirationDate = new BigInt(0)
+  role.save()
+
+  log.info('[handleRoleRevoked] Role {} NFT {} ended, tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
 }

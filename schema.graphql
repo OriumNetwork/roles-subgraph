@@ -13,7 +13,6 @@ type Account @entity {
 
 type Role @entity {
   id: ID!
-  roleId: Bytes!
   nft: Nft!
   grantor: Account!
   grantee: Account!
