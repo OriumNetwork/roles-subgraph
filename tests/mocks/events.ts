@@ -1,4 +1,4 @@
-import { newMockEvent } from 'matchstick-as'
+import { log, newMockEvent } from 'matchstick-as'
 import { Transfer } from '../../generated/Traveler/ChronosTraveler'
 import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { RoleGranted, RoleRevoked } from '../../generated/Roles/ERC7432Roles'
@@ -14,12 +14,18 @@ function createNewTransferEvent(from: string, to: string, tokenId: string, addre
   return event
 }
 
-function createNewRoleRevokedEvent(role: string, tokenId: string, address: string, grantee: string): RoleRevoked {
+function createNewRoleRevokedEvent(
+  role: string,
+  tokenId: string,
+  tokenAddress: string,
+  grantee: string,
+  address: string,
+): RoleRevoked {
   const event = changetype<RoleRevoked>(newMockEvent())
   event.parameters = new Array<ethereum.EventParam>()
   event.parameters.push(buildEventParamBytes('_role', role))
   event.parameters.push(buildEventParamUint('_tokenId', tokenId))
-  event.parameters.push(buildEventParamAddress('_tokenAddress', address))
+  event.parameters.push(buildEventParamAddress('_tokenAddress', tokenAddress))
   event.parameters.push(buildEventParamAddress('_grantee', grantee))
   event.address = Address.fromString(address)
 
@@ -29,16 +35,17 @@ function createNewRoleRevokedEvent(role: string, tokenId: string, address: strin
 function createNewRoleGrantedEvent(
   role: string,
   tokenId: string,
-  address: string,
+  tokenAddress: string,
   grantee: string,
   expirationDate: string,
   data: string,
+  address: string,
 ): RoleGranted {
   const event = changetype<RoleGranted>(newMockEvent())
   event.parameters = new Array<ethereum.EventParam>()
   event.parameters.push(buildEventParamBytes('_role', role))
+  event.parameters.push(buildEventParamAddress('_tokenAddress', tokenAddress))
   event.parameters.push(buildEventParamUint('_tokenId', tokenId))
-  event.parameters.push(buildEventParamAddress('_tokenAddress', address))
   event.parameters.push(buildEventParamAddress('_grantee', grantee))
   event.parameters.push(buildEventParamUint('_expirationDate', expirationDate))
   event.parameters.push(buildEventParamBytes('_data', data))

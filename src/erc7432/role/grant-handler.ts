@@ -4,6 +4,10 @@ import { Account, Nft, Role } from '../../../generated/schema'
 import { generateId } from '../../utils/helper'
 
 export function handleRoleGranted(event: RoleGranted): void {
+
+  log.info('[handleRoleGranted] RoleGranted event received for NFT {}', [event.params._tokenId.toString()])
+
+
   const tokenId = event.params._tokenId.toString()
   const address = event.address.toHexString()
 
