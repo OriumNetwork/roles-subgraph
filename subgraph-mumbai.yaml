@@ -9,7 +9,7 @@ dataSources:
     source:
       address: '0x8680fC3Df31805B1F7f8BfB702f723460d360FE9'
       abi: ERC7432Roles
-      startBlock: 8099655 //TODO: check this
+      startBlock: 39322273
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

@@ -5,9 +5,9 @@ import { generateId } from '../../utils/helper'
 
 export function handleRoleRevoked(event: RoleRevoked): void {
   const tokenId = event.params._tokenId.toString()
-  const address = event.address.toHexString()
+  const tokenAddress = event.params._tokenAddress.toHexString()
 
-  const nftId = generateId(tokenId, address)
+  const nftId = generateId(tokenId, tokenAddress)
   const nft = Nft.load(nftId)
 
   if (!nft) {
@@ -15,10 +15,11 @@ export function handleRoleRevoked(event: RoleRevoked): void {
     return
   }
 
+  const address = event.address.toHexString()
   const nftOwner = nft.owner
 
   if (nftOwner != address) {
-    log.warning('[handleRoleRevoked] NFT {} is not owned by {}, skipping transfer...', [address])
+    log.warning('[handleRoleRevoked] NFT {} is not owned by {}, skipping transfer...', [nftId, address])
     return
   }
 
@@ -33,5 +34,5 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   role.expirationDate = new BigInt(0)
   role.save()
 
-  log.info('[handleRoleRevoked] Role {} NFT {} ended, tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
+  log.info('[handleRoleRevoked] Role: {} NFT: {} Tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
 }

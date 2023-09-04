@@ -1,3 +1,3 @@
-export function generateId(tokenId: string, nftAddress: string): string {
-  return nftAddress + '-' + tokenId
+export function generateId(tokenId: string, tokenAddress: string): string {
+  return tokenId + '-' + tokenAddress
 }

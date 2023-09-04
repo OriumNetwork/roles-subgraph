@@ -13,7 +13,7 @@
     "build-goerli": "graph build subgraph.yaml",
     "deploy-goerli": "graph deploy --node https://api.thegraph.com/deploy/ orium-network/nft-roles-goerli",
     "test-goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph test goerli",
-    "test-erc7432": "cp subgraph-goerli.yaml subgraph.yaml && graph test goerli/erc7432/grant-handler",
+    "test-mumbai": "cp subgraph-mumbai.yaml subgraph.yaml && graph test goerli",
     "lint": "npx eslint src/",
     "lint-fix": "npx eslint src/ --fix && npx prettier --write .",
     "lint-staged": "npx lint-staged"

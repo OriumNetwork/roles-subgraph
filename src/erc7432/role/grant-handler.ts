@@ -4,14 +4,10 @@ import { Account, Nft, Role } from '../../../generated/schema'
 import { generateId } from '../../utils/helper'
 
 export function handleRoleGranted(event: RoleGranted): void {
-
-  log.info('[handleRoleGranted] RoleGranted event received for NFT {}', [event.params._tokenId.toString()])
-
-
   const tokenId = event.params._tokenId.toString()
-  const address = event.address.toHexString()
+  const tokenAddress = event.params._tokenAddress.toHexString()
 
-  const nftId = generateId(tokenId, address)
+  const nftId = generateId(tokenId, tokenAddress)
   const nft = Nft.load(nftId)
 
   if (!nft) {
@@ -19,11 +15,12 @@ export function handleRoleGranted(event: RoleGranted): void {
     return
   }
 
+  const address = event.address.toHexString()
   const nftOwner = nft.owner
   const grantor = Account.load(address)
 
   if (!grantor || nftOwner != address) {
-    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping transfer...', [address])
+    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping transfer...', [nftId, address])
     return
   }
 
@@ -49,5 +46,5 @@ export function handleRoleGranted(event: RoleGranted): void {
   role.data = event.params._data
   role.save()
 
-  log.info('[handleRentalEnded] Role {} NFT {} ended, tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
+  log.info('[handleRoleGranted] Role: {} NFT: {} Tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
 }

@@ -1,50 +1,164 @@
-import { assert, describe, test, clearStore, afterAll } from 'matchstick-as'
-import { handleTravelerTransfer } from '../../../src/chronos/traveler/transfer-handler'
+import { assert, describe, test, clearStore, afterAll, beforeEach } from 'matchstick-as'
 import { generateId } from '../../../src/utils/helper'
-import { createNewTransferEvent } from '../../mocks/events'
+import { createNewRoleGrantedEvent, createNewRoleRevokedEvent } from '../../mocks/events'
 import { ZERO_ADDRESS } from '../../../src/utils/constants'
+import { handleRoleGranted, handleRoleRevoked } from '../../../src/erc7432'
+import { BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { createMockNft } from '../../mocks/entities'
 
 const tokenId = '123'
 const address1 = '0x1111111111111111111111111111111111111111'
 const address2 = '0x2222222222222222222222222222222222222222'
 const address3 = '0x3333333333333333333333333333333333333333'
 
+const tokenAddress = address1
+const grantee = address2
+const data = '0x1234567890'
+const expirationDate = '99999'
+
 describe('ERC Role Revoked', () => {
   afterAll(() => {
     clearStore()
   })
 
-  describe.('When entities no exists', () => {
-    test('Should transfer from address1 to address2', () => {
-      const event = createNewTransferEvent(address1, address2, tokenId, ZERO_ADDRESS)
-      const _id = generateId(event.params.tokenId.toString(), event.address.toHexString())
+  describe('When entities does not exists', () => {
+    describe('When role does not exists', () => {
+      beforeEach(() => {
+        clearStore()
+      })
+      test('Should skip if NFT does not exist', () => {
+        const keyId = generateId(tokenId, tokenAddress)
+        const roleId = Bytes.fromUTF8(keyId).toHex()
 
-      assert.entityCount('Nft', 0)
-      assert.entityCount('Account', 0)
+        const event = createNewRoleRevokedEvent(roleId, tokenId, tokenAddress, grantee, ZERO_ADDRESS)
 
-      handleTravelerTransfer(event)
+        handleRoleRevoked(event)
+      })
+      test('Should skip if NFT does not owned by grantor', () => {
+        createMockNft(tokenId, tokenAddress, address2)
 
-      assert.fieldEquals('Nft', _id, 'address', ZERO_ADDRESS)
-      assert.fieldEquals('Nft', _id, 'tokenId', tokenId)
-      assert.fieldEquals('Nft', _id, 'owner', address2)
+        const keyId = generateId(tokenId, tokenAddress)
+        const roleId = Bytes.fromUTF8(keyId).toHex()
+
+        const event = createNewRoleRevokedEvent(roleId, tokenId, tokenAddress, grantee, address3)
+
+        handleRoleRevoked(event)
+      })
+      test('Should skip if Role does not owned by grantor', () => {
+        createMockNft(tokenId, tokenAddress, address2)
+
+        const keyId = generateId(tokenId, tokenAddress)
+        const roleId = Bytes.fromUTF8(keyId).toHex()
+
+        const event = createNewRoleRevokedEvent(roleId, tokenId, tokenAddress, grantee, address2)
+
+        handleRoleRevoked(event)
+      })
+      test('Should revoke role from grantee', () => {
+        createMockNft(tokenId, tokenAddress, address2)
+
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Account', 1)
+        assert.entityCount('Role', 0)
+
+        const keyId = generateId(tokenId, tokenAddress)
+        const roleId = Bytes.fromUTF8(keyId).toHex()
+        const grantEvent = createNewRoleGrantedEvent(
+          roleId,
+          tokenId,
+          tokenAddress,
+          grantee,
+          expirationDate,
+          data,
+          address2,
+        )
+
+        //grant role
+        handleRoleGranted(grantEvent)
+
+        const revokeEvent = createNewRoleRevokedEvent(roleId, tokenId, tokenAddress, grantee, address2)
+
+        //revoke role
+        handleRoleRevoked(revokeEvent)
+
+        assert.entityCount('Role', 1)
+        assert.fieldEquals('Role', roleId, 'nft', keyId)
+        assert.fieldEquals('Role', roleId, 'grantor', grantEvent.address.toHexString())
+        assert.fieldEquals('Role', roleId, 'grantee', grantee)
+        assert.fieldEquals('Role', roleId, 'expirationDate', '0')
+        assert.fieldEquals('Role', roleId, 'data', data)
+      })
     })
   })
 
   describe('When entities already exists', () => {
-    test('Should transfer from address2 to address3', () => {
-      const event = createNewTransferEvent(address2, address3, tokenId, ZERO_ADDRESS)
-      const _id = generateId(event.params.tokenId.toString(), event.address.toHexString())
+    describe('When role already exists', () => {
+      beforeEach(() => {
+        clearStore()
+      })
+      test('Should revoke role from grantee', () => {
+        createMockNft(tokenId, tokenAddress, address2)
 
-      assert.entityCount('Nft', 1)
-      assert.entityCount('Account', 2)
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Account', 1)
+        assert.entityCount('Role', 0)
 
-      handleTravelerTransfer(event)
+        const keyId = generateId(tokenId, tokenAddress)
+        const roleId = Bytes.fromUTF8(keyId).toHex()
+        const grantEvent = createNewRoleGrantedEvent(
+          roleId,
+          tokenId,
+          tokenAddress,
+          grantee,
+          expirationDate,
+          data,
+          address2,
+        )
 
-      assert.fieldEquals('Nft', _id, 'address', ZERO_ADDRESS)
-      assert.fieldEquals('Nft', _id, 'tokenId', tokenId)
-      assert.fieldEquals('Nft', _id, 'owner', address3)
+        //grant role
+        handleRoleGranted(grantEvent)
 
-      assert.entityCount('Account', 3)
+        const revokeEvent = createNewRoleRevokedEvent(roleId, tokenId, tokenAddress, grantee, address2)
+
+        //revoke role
+        handleRoleRevoked(revokeEvent)
+
+        assert.entityCount('Role', 1)
+        assert.fieldEquals('Role', roleId, 'nft', keyId)
+        assert.fieldEquals('Role', roleId, 'grantor', grantEvent.address.toHexString())
+        assert.fieldEquals('Role', roleId, 'grantee', grantee)
+        assert.fieldEquals('Role', roleId, 'expirationDate', '0')
+        assert.fieldEquals('Role', roleId, 'data', data)
+
+        const newGrantee = address3
+        const newData = '0x0987654321'
+        const newExpirationDate = '88888'
+
+        const newGrantEvent = createNewRoleGrantedEvent(
+          roleId,
+          tokenId,
+          tokenAddress,
+          newGrantee,
+          newExpirationDate,
+          newData,
+          address2,
+        )
+
+        //grant role to another grantee
+        handleRoleGranted(newGrantEvent)
+
+        const newRevokeEvent = createNewRoleRevokedEvent(roleId, tokenId, tokenAddress, newGrantee, address2)
+
+        //revoke role
+        handleRoleRevoked(newRevokeEvent)
+
+        assert.entityCount('Role', 1)
+        assert.fieldEquals('Role', roleId, 'nft', keyId)
+        assert.fieldEquals('Role', roleId, 'grantor', grantEvent.address.toHexString())
+        assert.fieldEquals('Role', roleId, 'grantee', newGrantee)
+        assert.fieldEquals('Role', roleId, 'expirationDate', '0')
+        assert.fieldEquals('Role', roleId, 'data', newData)
+      })
     })
   })
 })
