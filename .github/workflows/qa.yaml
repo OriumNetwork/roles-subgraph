@@ -28,6 +28,6 @@ jobs:
       - name: Test
         run: npm run test
       - name: Subgraph Auth
-        run: yarn graph-auth -- ${{ secrets.THEGRAPH_API_KEY }}
+        run: yarn graph:auth -- ${{ secrets.THEGRAPH_API_KEY }}
       - name: Subgraph Deploy
         run: npm run deploy:goerli
