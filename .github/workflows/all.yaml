@@ -22,8 +22,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GHB_TOKEN }}
       - name: Code Generator
-        run: npm run codegen:matic
+        run: npm run codegen:goerli
       - name: Build
-        run: npm run build:matic
+        run: npm run build:goerli
       - name: Test
         run: npm run test
