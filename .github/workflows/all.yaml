@@ -15,16 +15,11 @@ jobs:
         with:
           cache: npm
           node-version: 16
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@oriumnetwork'
       - name: Install Dependencies
         run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GHB_TOKEN }}
-        # Goerli
-      - name: Goerli Code Generator
-        run: npm run codegen-goerli
-      - name: Goerli Build
-        run: npm run build-goerli
-      - name: Goerli Test
-         run: npm run test-goerli
+      - name: Code Generator
+        run: npm run codegen:matic
+      - name: Build
+        run: npm run build:matic
+      - name: Test
+        run: npm run test

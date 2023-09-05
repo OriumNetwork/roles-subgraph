@@ -1,8 +1,8 @@
 import { assert, describe, test, clearStore, afterAll } from 'matchstick-as'
-import { handleTravelerTransfer } from '../../../src/chronos/traveler/transfer-handler'
-import { generateId } from '../../../src/utils/helper'
-import { createNewTransferEvent } from '../../mocks/events'
-import { ZERO_ADDRESS } from '../../../src/utils/constants'
+import { handleTravelerTransfer } from '../../src/chronos/traveler/transfer-handler'
+import { generateId } from '../../src/utils/helper'
+import { createNewTransferEvent } from '../mocks/events'
+import { ZERO_ADDRESS } from '../../src/utils/constants'
 
 const tokenId = '123'
 const address1 = '0x1111111111111111111111111111111111111111'
