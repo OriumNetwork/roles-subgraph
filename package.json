@@ -8,14 +8,15 @@
     "test": "tests"
   },
   "scripts": {
-    "graph-auth": "graph auth --product hosted-service",
-    "codegen-goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph.yaml",
-    "build-goerli": "graph build subgraph.yaml",
-    "deploy-goerli": "graph deploy --node https://api.thegraph.com/deploy/ orium-network/nft-roles-goerli",
-    "test-goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph test goerli",
+    "graph:auth": "graph auth --product hosted-service",
+    "codegen:goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph.yaml",
+    "build:goerli": "graph build subgraph.yaml",
+    "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/ orium-network/nft-roles-goerli",
+    "test": "graph test",
+    "coverage": "graph test -- -c",
     "lint": "npx eslint src/",
-    "lint-fix": "npx eslint src/ --fix && npx prettier --write .",
-    "lint-staged": "npx lint-staged"
+    "lint:fix": "npx eslint src/ --fix && npx prettier --write .",
+    "lint:staged": "npx lint-staged"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "^0.55.0"
@@ -31,7 +32,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-staged"
+      "pre-commit": "npm run lint:staged"
     }
   },
   "eslintIgnore": [

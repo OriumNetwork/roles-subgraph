@@ -1,11 +1,22 @@
-type Nft @entity(immutable: false) {
-  id: ID!
+type Nft @entity {
+  id: ID! # tokenId + tokenAddress
   address: String!
   tokenId: BigInt!
   owner: Account!
+  rolesHistory: [Role!] @derivedFrom(field: "nft")
 }
 
-type Account @entity(immutable: false) {
-  id: ID!
+type Account @entity {
+  id: ID! # address
   nfts: [Nft!] @derivedFrom(field: "owner")
+}
+
+type Role @entity {
+  id: ID! # grantorAddress + tokenId + tokenAddress + granteeAddress + roleHash
+  roleId: Bytes!
+  nft: Nft!
+  grantor: Account!
+  grantee: Account!
+  expirationDate: BigInt!
+  data: Bytes!
 }
