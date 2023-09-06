@@ -1,4 +1,4 @@
-export function generateId(tokenId: string, tokenAddress: string): string {
+export function generateNftId(tokenId: string, tokenAddress: string): string {
   return tokenId + '-' + tokenAddress
 }
 

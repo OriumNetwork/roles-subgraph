@@ -29,7 +29,15 @@ describe('ERC Role Revoked', () => {
 
         const event = createNewRoleRevokedEvent(roleId, tokenId, tokenAddress, grantee, address1)
 
+        assert.entityCount('Nft', 0)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 0)
+
         handleRoleRevoked(event)
+
+        assert.entityCount('Nft', 0)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 0)
       })
       test('Should skip if grantor does not exist', () => {
         createMockNft(tokenId, tokenAddress, address2)
@@ -38,7 +46,15 @@ describe('ERC Role Revoked', () => {
 
         const event = createNewRoleRevokedEvent(roleId, tokenId, tokenAddress, grantee, address3)
 
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 1)
+
         handleRoleRevoked(event)
+
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 1)
       })
       test('Should skip if NFT does not owned by grantor', () => {
         createMockAccount(address3)
@@ -48,7 +64,15 @@ describe('ERC Role Revoked', () => {
 
         const event = createNewRoleRevokedEvent(roleId, tokenId, tokenAddress, grantee, address3)
 
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 2)
+
         handleRoleRevoked(event)
+
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 2)
       })
       test('Should skip if Role does not owned by grantor', () => {
         createMockNft(tokenId, tokenAddress, address2)

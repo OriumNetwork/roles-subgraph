@@ -29,7 +29,15 @@ describe('ERC Role Granted', () => {
 
         const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address1)
 
+        assert.entityCount('Nft', 0)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 0)
+
         handleRoleGranted(event)
+
+        assert.entityCount('Nft', 0)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 0)
       })
       test('Should skip if grantor does not exist', () => {
         createMockNft(tokenId, tokenAddress, address2)
@@ -37,7 +45,15 @@ describe('ERC Role Granted', () => {
         const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
         const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address3)
 
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 1)
+
         handleRoleGranted(event)
+
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 1)
       })
       test('Should skip if NFT does not owned by grantor', () => {
         createMockAccount(address3)
@@ -46,7 +62,15 @@ describe('ERC Role Granted', () => {
         const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
         const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address3)
 
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 2)
+
         handleRoleGranted(event)
+
+        assert.entityCount('Nft', 1)
+        assert.entityCount('Role', 0)
+        assert.entityCount('Account', 2)
       })
       test('Should create grantee and give grant role to it', () => {
         const nft = createMockNft(tokenId, tokenAddress, address2)

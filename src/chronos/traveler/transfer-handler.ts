@@ -1,13 +1,13 @@
 import { Transfer } from '../../../generated/Traveler/ChronosTraveler'
 import { handleNftTransfer } from '../../entities/nft/transfer-handler'
 import { NftTransfer } from '../../interfaces/nft-transfer'
-import { generateId } from '../../utils/helper'
+import { generateNftId } from '../../utils/helper'
 
 export function handleTravelerTransfer(event: Transfer): void {
   const tokenId = event.params.tokenId
   const address = event.address.toHexString()
 
-  const id = generateId(tokenId.toString(), address)
+  const id = generateNftId(tokenId.toString(), address)
 
   const nft: NftTransfer = {
     id: id,

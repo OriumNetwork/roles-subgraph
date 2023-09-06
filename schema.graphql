@@ -1,5 +1,5 @@
 type Nft @entity {
-  id: ID! # tokenAddress + tokenId
+  id: ID! # tokenId + tokenAddress
   address: String!
   tokenId: BigInt!
   owner: Account!

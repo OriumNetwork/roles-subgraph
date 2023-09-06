@@ -1,13 +1,13 @@
 import { log } from '@graphprotocol/graph-ts'
 import { RoleGranted } from '../../../generated/Roles/ERC7432Roles'
 import { Account, Nft, Role } from '../../../generated/schema'
-import { generateId } from '../../utils/helper'
+import { generateNftId, generateRoleId } from '../../utils/helper'
 
 export function handleRoleGranted(event: RoleGranted): void {
   const tokenId = event.params._tokenId.toString()
   const tokenAddress = event.params._tokenAddress.toHexString()
 
-  const nftId = generateId(tokenId, tokenAddress)
+  const nftId = generateNftId(tokenId, tokenAddress)
   const nft = Nft.load(nftId)
 
   if (!nft) {
@@ -36,7 +36,7 @@ export function handleRoleGranted(event: RoleGranted): void {
     grantee.save()
   }
 
-  const roleId = `${grantor.id}-${nft.id}-${grantee.id}-${event.params._role.toHex()}`
+  const roleId = generateRoleId(grantor.id, nft.id, grantee.id, event.params._role.toHex())
   let role = Role.load(roleId)
 
   if (!role) {
