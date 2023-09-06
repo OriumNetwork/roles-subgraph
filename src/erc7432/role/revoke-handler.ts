@@ -1,6 +1,6 @@
 import { BigInt, log } from '@graphprotocol/graph-ts'
 import { RoleRevoked } from '../../../generated/Roles/ERC7432Roles'
-import { Nft, Role } from '../../../generated/schema'
+import { Account, Nft, Role } from '../../../generated/schema'
 import { generateId } from '../../utils/helper'
 
 export function handleRoleRevoked(event: RoleRevoked): void {
@@ -11,23 +11,35 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   const nft = Nft.load(nftId)
 
   if (!nft) {
-    log.warning('[handleRoleRevoked] NFT {} does not exist, skipping transfer...', [nftId])
+    log.warning('[handleRoleRevoked] NFT {} does not exist, skipping...', [nftId])
     return
   }
 
   const address = event.address.toHexString()
-  const nftOwner = nft.owner
-
-  if (nftOwner != address) {
-    log.warning('[handleRoleRevoked] NFT {} is not owned by {}, skipping transfer...', [nftId, address])
+  const grantor = Account.load(address)
+  if (!grantor) {
+    log.warning('[handleRoleGranted] grantor {} does not exist, skipping...', [address])
     return
   }
 
-  const roleId = event.params._role.toHex()
+  if (grantor.id != nft.owner) {
+    log.warning('[handleRoleRevoked] NFT {} is not owned by {}, skipping...', [nftId, address])
+    return
+  }
+
+  const granteeId = event.params._grantee.toHex()
+  const grantee = Account.load(granteeId)
+
+  if (!grantee) {
+    log.warning('[handleRoleGranted] grantee {} does not exist, skipping...', [address])
+    return
+  }
+
+  const roleId = `${grantor.id}-${nft.id}-${grantee.id}-${event.params._role.toHex()}`
   const role = Role.load(roleId)
 
   if (!role) {
-    log.warning('[handleRoleRevoked] Role {} does not exist, skipping transfer...', [roleId])
+    log.warning('[handleRoleRevoked] Role {} does not exist, skipping...', [roleId])
     return
   }
 

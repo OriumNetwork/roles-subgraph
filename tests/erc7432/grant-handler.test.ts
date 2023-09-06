@@ -1,10 +1,9 @@
 import { assert, describe, test, clearStore, afterAll, beforeEach } from 'matchstick-as'
-import { generateId } from '../../src/utils/helper'
+import { generateRoleId } from '../../src/utils/helper'
 import { createNewRoleGrantedEvent } from '../mocks/events'
-import { ZERO_ADDRESS } from '../../src/utils/constants'
 import { handleRoleGranted } from '../../src/erc7432'
 import { Bytes } from '@graphprotocol/graph-ts'
-import { createMockNft } from '../mocks/entities'
+import { createMockAccount, createMockNft } from '../mocks/entities'
 
 const tokenId = '123'
 const address1 = '0x1111111111111111111111111111111111111111'
@@ -20,85 +19,105 @@ describe('ERC Role Granted', () => {
   afterAll(() => {
     clearStore()
   })
-
   describe('When entities does not exists', () => {
     describe('When role does not exists', () => {
       beforeEach(() => {
         clearStore()
       })
       test('Should skip if NFT does not exist', () => {
-        const keyId = generateId(tokenId, tokenAddress)
-        const roleId = Bytes.fromUTF8(keyId).toHex()
+        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
 
-        const event = createNewRoleGrantedEvent(
-          roleId,
-          tokenId,
-          tokenAddress,
-          grantee,
-          expirationDate,
-          data,
-          ZERO_ADDRESS,
-        )
+        const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address1)
 
         handleRoleGranted(event)
       })
-      test('Should skip if NFT does not owned by grantor', () => {
+      test('Should skip if grantor does not exist', () => {
         createMockNft(tokenId, tokenAddress, address2)
 
-        const keyId = generateId(tokenId, tokenAddress)
-        const roleId = Bytes.fromUTF8(keyId).toHex()
-
+        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
         const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address3)
 
         handleRoleGranted(event)
       })
-      test('Should give grant role to grantee', () => {
+      test('Should skip if NFT does not owned by grantor', () => {
+        createMockAccount(address3)
         createMockNft(tokenId, tokenAddress, address2)
+
+        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
+        const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address3)
+
+        handleRoleGranted(event)
+      })
+      test('Should create grantee and give grant role to it', () => {
+        const nft = createMockNft(tokenId, tokenAddress, address2)
+
+        assert.entityCount('Account', 1)
+
+        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
+        const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address2)
+
+        handleRoleGranted(event)
+
+        const _id = generateRoleId(address2, nft.id, grantee, roleId)
+
+        assert.entityCount('Role', 1)
+        assert.fieldEquals('Role', _id, 'roleId', roleId)
+        assert.fieldEquals('Role', _id, 'nft', nft.id)
+        assert.fieldEquals('Role', _id, 'grantor', event.address.toHexString())
+        assert.fieldEquals('Role', _id, 'grantee', grantee)
+        assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
+        assert.fieldEquals('Role', _id, 'data', data)
+      })
+      test('Should give grant role to grantee', () => {
+        const nft = createMockNft(tokenId, tokenAddress, address2)
 
         assert.entityCount('Nft', 1)
         assert.entityCount('Account', 1)
         assert.entityCount('Role', 0)
 
-        const keyId = generateId(tokenId, tokenAddress)
-        const roleId = Bytes.fromUTF8(keyId).toHex()
+        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
         const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address2)
 
         handleRoleGranted(event)
 
+        const _id = generateRoleId(address2, nft.id, grantee, roleId)
+
         assert.entityCount('Role', 1)
-        assert.fieldEquals('Role', roleId, 'nft', keyId)
-        assert.fieldEquals('Role', roleId, 'grantor', event.address.toHexString())
-        assert.fieldEquals('Role', roleId, 'grantee', grantee)
-        assert.fieldEquals('Role', roleId, 'expirationDate', expirationDate)
-        assert.fieldEquals('Role', roleId, 'data', data)
+        assert.fieldEquals('Role', _id, 'roleId', roleId)
+        assert.fieldEquals('Role', _id, 'nft', nft.id)
+        assert.fieldEquals('Role', _id, 'grantor', event.address.toHexString())
+        assert.fieldEquals('Role', _id, 'grantee', grantee)
+        assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
+        assert.fieldEquals('Role', _id, 'data', data)
       })
     })
   })
-
   describe('When entities already exists', () => {
     describe('When role already exists', () => {
       beforeEach(() => {
         clearStore()
       })
       test('Should give grant role to grantee', () => {
-        createMockNft(tokenId, tokenAddress, address1)
+        const nft = createMockNft(tokenId, tokenAddress, address1)
 
         assert.entityCount('Nft', 1)
         assert.entityCount('Account', 1)
         assert.entityCount('Role', 0)
 
-        const keyId = generateId(tokenId, tokenAddress)
-        const roleId = Bytes.fromUTF8(keyId).toHex()
+        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
         const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address1)
 
         handleRoleGranted(event)
 
+        const _id = generateRoleId(address1, nft.id, grantee, roleId)
+
         assert.entityCount('Role', 1)
-        assert.fieldEquals('Role', roleId, 'nft', keyId)
-        assert.fieldEquals('Role', roleId, 'grantor', event.address.toHexString())
-        assert.fieldEquals('Role', roleId, 'grantee', grantee)
-        assert.fieldEquals('Role', roleId, 'expirationDate', expirationDate)
-        assert.fieldEquals('Role', roleId, 'data', data)
+        assert.fieldEquals('Role', _id, 'roleId', roleId)
+        assert.fieldEquals('Role', _id, 'nft', nft.id)
+        assert.fieldEquals('Role', _id, 'grantor', event.address.toHexString())
+        assert.fieldEquals('Role', _id, 'grantee', grantee)
+        assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
+        assert.fieldEquals('Role', _id, 'data', data)
 
         const newGrantee = address3
         const newData = '0x0987654321'
@@ -116,12 +135,27 @@ describe('ERC Role Granted', () => {
 
         handleRoleGranted(event2)
 
-        assert.entityCount('Role', 1)
-        assert.fieldEquals('Role', roleId, 'nft', keyId)
-        assert.fieldEquals('Role', roleId, 'grantor', event.address.toHexString())
-        assert.fieldEquals('Role', roleId, 'grantee', newGrantee)
-        assert.fieldEquals('Role', roleId, 'expirationDate', newExpirationDate)
-        assert.fieldEquals('Role', roleId, 'data', newData)
+        const _id2 = generateRoleId(address1, nft.id, newGrantee, roleId)
+
+        assert.entityCount('Role', 2)
+        assert.fieldEquals('Role', _id2, 'roleId', roleId)
+        assert.fieldEquals('Role', _id2, 'nft', nft.id)
+        assert.fieldEquals('Role', _id2, 'grantor', event.address.toHexString())
+        assert.fieldEquals('Role', _id2, 'grantee', newGrantee)
+        assert.fieldEquals('Role', _id2, 'expirationDate', newExpirationDate)
+        assert.fieldEquals('Role', _id2, 'data', newData)
+
+        const event3 = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address1)
+
+        handleRoleGranted(event3)
+
+        assert.entityCount('Role', 2)
+        assert.fieldEquals('Role', _id, 'roleId', roleId)
+        assert.fieldEquals('Role', _id, 'nft', nft.id)
+        assert.fieldEquals('Role', _id, 'grantor', event.address.toHexString())
+        assert.fieldEquals('Role', _id, 'grantee', grantee)
+        assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
+        assert.fieldEquals('Role', _id, 'data', data)
       })
     })
   })

@@ -16,4 +16,11 @@ function createMockNft(tokenId: string, tokenAddress: string, ownerAddress: stri
   return nft
 }
 
-export { createMockNft }
+function createMockAccount(address: string): Account {
+  const account = new Account(address)
+  account.save()
+
+  return account
+}
+
+export { createMockNft, createMockAccount }

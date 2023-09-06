@@ -11,16 +11,20 @@ export function handleRoleGranted(event: RoleGranted): void {
   const nft = Nft.load(nftId)
 
   if (!nft) {
-    log.warning('[handleRoleGranted] NFT {} does not exist, skipping transfer...', [nftId])
+    log.warning('[handleRoleGranted] NFT {} does not exist, skipping...', [nftId])
     return
   }
 
   const address = event.address.toHexString()
-  const nftOwner = nft.owner
   const grantor = Account.load(address)
 
-  if (!grantor || nftOwner != address) {
-    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping transfer...', [nftId, address])
+  if (!grantor) {
+    log.warning('[handleRoleGranted] grantor {} does not exist, skipping...', [address])
+    return
+  }
+
+  if (grantor.id != nft.owner) {
+    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping...', [nftId, grantor.id.toString()])
     return
   }
 
@@ -32,13 +36,14 @@ export function handleRoleGranted(event: RoleGranted): void {
     grantee.save()
   }
 
-  const roleId = event.params._role.toHex()
+  const roleId = `${grantor.id}-${nft.id}-${grantee.id}-${event.params._role.toHex()}`
   let role = Role.load(roleId)
 
   if (!role) {
     role = new Role(roleId)
   }
 
+  role.roleId = event.params._role
   role.nft = nft.id
   role.grantor = grantor.id
   role.grantee = grantee.id
