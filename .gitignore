@@ -3,6 +3,7 @@ node_modules
 #build 
 build/
 generated/
+.DS_Store
 
 #tests
 tests/.latest.json
