@@ -27,7 +27,7 @@ function createNewRoleRevokedEvent(
   event.parameters.push(buildEventParamAddress('_tokenAddress', tokenAddress))
   event.parameters.push(buildEventParamUint('_tokenId', tokenId))
   event.parameters.push(buildEventParamAddress('_grantee', grantee))
-  event.address = Address.fromString(address)
+  event.transaction.from = Address.fromString(address)
 
   return event
 }
@@ -49,7 +49,7 @@ function createNewRoleGrantedEvent(
   event.parameters.push(buildEventParamAddress('_grantee', grantee))
   event.parameters.push(buildEventParamUint('_expirationDate', expirationDate))
   event.parameters.push(buildEventParamBytes('_data', data))
-  event.address = Address.fromString(address)
+  event.transaction.from = Address.fromString(address)
 
   return event
 }

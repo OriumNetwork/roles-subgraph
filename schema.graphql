@@ -12,7 +12,7 @@ type Account @entity {
 }
 
 type Role @entity {
-  id: ID! # grantorAddress + tokenAddress + tokenId + granteeAddress + roleHash
+  id: ID! # grantorAddress + tokenId + tokenAddress + granteeAddress + roleHash
   roleId: Bytes!
   nft: Nft!
   grantor: Account!

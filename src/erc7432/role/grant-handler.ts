@@ -15,7 +15,7 @@ export function handleRoleGranted(event: RoleGranted): void {
     return
   }
 
-  const address = event.address.toHexString()
+  const address = event.transaction.from.toHexString()
   const grantor = Account.load(address)
 
   if (!grantor) {
@@ -24,7 +24,7 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
 
   if (grantor.id != nft.owner) {
-    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping...', [nftId, grantor.id.toString()])
+    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping...', [nftId, grantor.id])
     return
   }
 
