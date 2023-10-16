@@ -2,7 +2,7 @@ import { BigInt } from '@graphprotocol/graph-ts'
 import { Account, Nft } from '../../generated/schema'
 import { generateNftId } from '../../src/utils/helper'
 
-function createMockNft(tokenId: string, tokenAddress: string, ownerAddress: string): Nft {
+export function createMockNft(tokenId: string, tokenAddress: string, ownerAddress: string): Nft {
   const nft = new Nft(generateNftId(tokenId, tokenAddress))
   nft.address = tokenAddress
   nft.tokenId = BigInt.fromString(tokenId)
@@ -16,11 +16,9 @@ function createMockNft(tokenId: string, tokenAddress: string, ownerAddress: stri
   return nft
 }
 
-function createMockAccount(address: string): Account {
+export function createMockAccount(address: string): Account {
   const account = new Account(address)
   account.save()
 
   return account
 }
-
-export { createMockNft, createMockAccount }

@@ -9,9 +9,8 @@
   },
   "scripts": {
     "graph:auth": "graph auth --product hosted-service",
-    "codegen:goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph.yaml",
-    "build:goerli": "graph build subgraph.yaml",
-    "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/ orium-network/nft-roles-goerli",
+    "build:goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-goerli",
     "test": "graph test",
     "coverage": "graph test -- -c",
     "lint": "npx eslint src/",
