@@ -2,7 +2,7 @@ import { assert, describe, test, clearStore, afterAll } from 'matchstick-as'
 import { handleErc721Transfer } from '../../src/erc721'
 import { generateNftId } from '../../src/utils/helper'
 import { createTransferEvent } from '../helpers/events'
-import { ZERO_ADDRESS, Addresses } from '../../src/utils/constants'
+import { Addresses, ZERO_ADDRESS } from '../helpers/contants'
 
 const tokenId = '123'
 

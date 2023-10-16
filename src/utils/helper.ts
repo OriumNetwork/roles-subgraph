@@ -21,7 +21,7 @@ export function createNft(id: string, contractAddress: string, tokenId: BigInt, 
 }
 
 export function generateNftId(tokenId: string, tokenAddress: string): string {
-  return tokenId + '-' + tokenAddress
+  return tokenAddress + '-' + tokenId
 }
 
 export function generateRoleId(grantor: string, nftId: string, grantee: string, role: string): string {

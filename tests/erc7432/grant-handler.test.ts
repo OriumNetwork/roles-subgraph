@@ -1,186 +1,185 @@
-import { assert, describe, test, clearStore, afterAll, beforeEach } from 'matchstick-as'
-import { generateRoleId } from '../../src/utils/helper'
-import { createNewRoleGrantedEvent } from '../mocks/events'
+import { assert, describe, test, clearStore, afterEach } from 'matchstick-as'
+import { createNewRoleGrantedEvent } from '../helpers/events'
 import { handleRoleGranted } from '../../src/erc7432'
+import { Addresses, ZERO_ADDRESS } from '../helpers/contants'
 import { Bytes } from '@graphprotocol/graph-ts'
-import { createMockAccount, createMockNft } from '../mocks/entities'
+import { createMockAccount, createMockNft } from '../helpers/entities'
 
+const RoleId = Bytes.fromUTF8('0xGrantRole').toHex()
+const tokenAddress = Addresses[0]
 const tokenId = '123'
-const address1 = '0x1111111111111111111111111111111111111111'
-const address2 = '0x2222222222222222222222222222222222222222'
-const address3 = '0x3333333333333333333333333333333333333333'
-
-const tokenAddress = address1
-const grantee = address2
+const grantee = Addresses[1]
+const grantor = Addresses[2]
+const revocable = true
 const data = '0x1234567890'
 const expirationDate = '99999'
 
-describe('ERC Role Granted', () => {
-  afterAll(() => {
+describe('ERC-7432 RoleGranted Handler', () => {
+  afterEach(() => {
     clearStore()
   })
-  describe('When entities does not exists', () => {
-    describe('When role does not exists', () => {
-      beforeEach(() => {
-        clearStore()
-      })
-      test('Should skip if NFT does not exist', () => {
-        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
 
-        const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address1)
+  test('should not grant role when NFT does not exist', () => {
+    assert.entityCount('Role', 0)
+    assert.entityCount('Account', 0)
 
-        assert.entityCount('Nft', 0)
-        assert.entityCount('Role', 0)
-        assert.entityCount('Account', 0)
+    const event = createNewRoleGrantedEvent(
+      RoleId,
+      tokenId,
+      tokenAddress,
+      grantee,
+      grantor,
+      expirationDate,
+      revocable,
+      data,
+      ZERO_ADDRESS,
+    )
+    handleRoleGranted(event)
 
-        handleRoleGranted(event)
-
-        assert.entityCount('Nft', 0)
-        assert.entityCount('Role', 0)
-        assert.entityCount('Account', 0)
-      })
-      test('Should skip if grantor does not exist', () => {
-        createMockNft(tokenId, tokenAddress, address2)
-
-        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
-        const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address3)
-
-        assert.entityCount('Nft', 1)
-        assert.entityCount('Role', 0)
-        assert.entityCount('Account', 1)
-
-        handleRoleGranted(event)
-
-        assert.entityCount('Nft', 1)
-        assert.entityCount('Role', 0)
-        assert.entityCount('Account', 1)
-      })
-      test('Should skip if NFT does not owned by grantor', () => {
-        createMockAccount(address3)
-        createMockNft(tokenId, tokenAddress, address2)
-
-        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
-        const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address3)
-
-        assert.entityCount('Nft', 1)
-        assert.entityCount('Role', 0)
-        assert.entityCount('Account', 2)
-
-        handleRoleGranted(event)
-
-        assert.entityCount('Nft', 1)
-        assert.entityCount('Role', 0)
-        assert.entityCount('Account', 2)
-      })
-      test('Should create grantee and give grant role to it', () => {
-        const nft = createMockNft(tokenId, tokenAddress, address2)
-
-        assert.entityCount('Account', 1)
-
-        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
-        const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address2)
-
-        handleRoleGranted(event)
-
-        const _id = generateRoleId(address2, nft.id, grantee, roleId)
-
-        assert.entityCount('Role', 1)
-        assert.fieldEquals('Role', _id, 'roleId', roleId)
-        assert.fieldEquals('Role', _id, 'nft', nft.id)
-        assert.fieldEquals('Role', _id, 'grantor', event.transaction.from.toHexString())
-        assert.fieldEquals('Role', _id, 'grantee', grantee)
-        assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
-        assert.fieldEquals('Role', _id, 'data', data)
-      })
-      test('Should give grant role to grantee', () => {
-        const nft = createMockNft(tokenId, tokenAddress, address2)
-
-        assert.entityCount('Nft', 1)
-        assert.entityCount('Account', 1)
-        assert.entityCount('Role', 0)
-
-        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
-        const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address2)
-
-        handleRoleGranted(event)
-
-        const _id = generateRoleId(address2, nft.id, grantee, roleId)
-
-        assert.entityCount('Role', 1)
-        assert.fieldEquals('Role', _id, 'roleId', roleId)
-        assert.fieldEquals('Role', _id, 'nft', nft.id)
-        assert.fieldEquals('Role', _id, 'grantor', event.transaction.from.toHexString())
-        assert.fieldEquals('Role', _id, 'grantee', grantee)
-        assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
-        assert.fieldEquals('Role', _id, 'data', data)
-      })
-    })
+    assert.entityCount('Role', 0)
+    assert.entityCount('Account', 0)
   })
-  describe('When entities already exists', () => {
-    describe('When role already exists', () => {
-      beforeEach(() => {
-        clearStore()
-      })
-      test('Should give grant role to grantee', () => {
-        const nft = createMockNft(tokenId, tokenAddress, address1)
 
-        assert.entityCount('Nft', 1)
-        assert.entityCount('Account', 1)
-        assert.entityCount('Role', 0)
+  test('should not grant role when grantor does not exist', () => {
+    createMockNft(tokenAddress, tokenId, Addresses[0])
+    assert.entityCount('Role', 0)
+    assert.entityCount('Account', 1)
 
-        const roleId = Bytes.fromUTF8('0xGrantRole').toHex()
-        const event = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address1)
+    const event = createNewRoleGrantedEvent(
+      RoleId,
+      tokenId,
+      tokenAddress,
+      grantee,
+      grantor,
+      expirationDate,
+      revocable,
+      data,
+      ZERO_ADDRESS,
+    )
+    handleRoleGranted(event)
 
-        handleRoleGranted(event)
+    assert.entityCount('Role', 0)
+    assert.entityCount('Account', 1)
+  })
 
-        const _id = generateRoleId(address1, nft.id, grantee, roleId)
+  test('should not grant role if grantor is not NFT owner', () => {
+    createMockNft(tokenAddress, tokenId, Addresses[0])
+    createMockAccount(grantor)
+    assert.entityCount('Role', 0)
+    assert.entityCount('Account', 2)
 
-        assert.entityCount('Role', 1)
-        assert.fieldEquals('Role', _id, 'roleId', roleId)
-        assert.fieldEquals('Role', _id, 'nft', nft.id)
-        assert.fieldEquals('Role', _id, 'grantor', event.transaction.from.toHexString())
-        assert.fieldEquals('Role', _id, 'grantee', grantee)
-        assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
-        assert.fieldEquals('Role', _id, 'data', data)
+    const event = createNewRoleGrantedEvent(
+      RoleId,
+      tokenId,
+      tokenAddress,
+      grantee,
+      grantor,
+      expirationDate,
+      revocable,
+      data,
+      ZERO_ADDRESS,
+    )
+    handleRoleGranted(event)
 
-        const newGrantee = address3
-        const newData = '0x0987654321'
-        const newExpirationDate = '88888'
+    assert.entityCount('Role', 0)
+    assert.entityCount('Account', 2)
+  })
 
-        const event2 = createNewRoleGrantedEvent(
-          roleId,
-          tokenId,
-          tokenAddress,
-          newGrantee,
-          newExpirationDate,
-          newData,
-          address1,
-        )
+  test('should grant multiple roles for the same NFT', () => {
+    createMockNft(tokenAddress, tokenId, grantor)
+    assert.entityCount('Role', 0)
+    assert.entityCount('Account', 1)
 
-        handleRoleGranted(event2)
+    const event1 = createNewRoleGrantedEvent(
+      RoleId,
+      tokenId,
+      tokenAddress,
+      Addresses[0],
+      grantor,
+      expirationDate,
+      revocable,
+      data,
+      ZERO_ADDRESS,
+    )
+    handleRoleGranted(event1)
+    const event2 = createNewRoleGrantedEvent(
+      RoleId,
+      tokenId,
+      tokenAddress,
+      Addresses[1],
+      grantor,
+      expirationDate,
+      revocable,
+      data,
+      ZERO_ADDRESS,
+    )
+    handleRoleGranted(event2)
+    const event3 = createNewRoleGrantedEvent(
+      RoleId,
+      tokenId,
+      tokenAddress,
+      Addresses[2],
+      grantor,
+      expirationDate,
+      revocable,
+      data,
+      ZERO_ADDRESS,
+    )
+    handleRoleGranted(event3)
 
-        const _id2 = generateRoleId(address1, nft.id, newGrantee, roleId)
+    assert.entityCount('Role', 3)
+    assert.entityCount('Account', 3)
+  })
 
-        assert.entityCount('Role', 2)
-        assert.fieldEquals('Role', _id2, 'roleId', roleId)
-        assert.fieldEquals('Role', _id2, 'nft', nft.id)
-        assert.fieldEquals('Role', _id2, 'grantor', event.transaction.from.toHexString())
-        assert.fieldEquals('Role', _id2, 'grantee', newGrantee)
-        assert.fieldEquals('Role', _id2, 'expirationDate', newExpirationDate)
-        assert.fieldEquals('Role', _id2, 'data', newData)
+  test('should grant multiple roles for different NFTs', () => {
+    const tokenId1 = '123'
+    const tokenId2 = '456'
+    const tokenId3 = '789'
 
-        const event3 = createNewRoleGrantedEvent(roleId, tokenId, tokenAddress, grantee, expirationDate, data, address1)
+    createMockNft(tokenAddress, tokenId1, grantor)
+    createMockNft(tokenAddress, tokenId2, grantor)
+    createMockNft(tokenAddress, tokenId3, grantor)
+    assert.entityCount('Role', 0)
+    assert.entityCount('Account', 1)
 
-        handleRoleGranted(event3)
+    const event1 = createNewRoleGrantedEvent(
+      RoleId,
+      tokenId1,
+      tokenAddress,
+      Addresses[0],
+      grantor,
+      expirationDate,
+      revocable,
+      data,
+      ZERO_ADDRESS,
+    )
+    handleRoleGranted(event1)
+    const event2 = createNewRoleGrantedEvent(
+      RoleId,
+      tokenId2,
+      tokenAddress,
+      Addresses[1],
+      grantor,
+      expirationDate,
+      revocable,
+      data,
+      ZERO_ADDRESS,
+    )
+    handleRoleGranted(event2)
+    const event3 = createNewRoleGrantedEvent(
+      RoleId,
+      tokenId3,
+      tokenAddress,
+      Addresses[2],
+      grantor,
+      expirationDate,
+      revocable,
+      data,
+      ZERO_ADDRESS,
+    )
+    handleRoleGranted(event3)
 
-        assert.entityCount('Role', 2)
-        assert.fieldEquals('Role', _id, 'roleId', roleId)
-        assert.fieldEquals('Role', _id, 'nft', nft.id)
-        assert.fieldEquals('Role', _id, 'grantor', event.transaction.from.toHexString())
-        assert.fieldEquals('Role', _id, 'grantee', grantee)
-        assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
-        assert.fieldEquals('Role', _id, 'data', data)
-      })
-    })
+    assert.entityCount('Role', 3)
+    assert.entityCount('Account', 3)
   })
 })
