@@ -4,6 +4,8 @@ import { handleRoleGranted } from '../../src/erc7432'
 import { Addresses, ZERO_ADDRESS } from '../helpers/contants'
 import { Bytes } from '@graphprotocol/graph-ts'
 import { createMockAccount, createMockNft } from '../helpers/entities'
+import { generateRoleId } from '../helpers/events'
+import { generateNftId } from '../../src/utils/helper'
 
 const RoleId = Bytes.fromUTF8('0xGrantRole').toHex()
 const tokenAddress = Addresses[0]
@@ -129,6 +131,10 @@ describe('ERC-7432 RoleGranted Handler', () => {
 
     assert.entityCount('Role', 3)
     assert.entityCount('Account', 3)
+
+    validateRole(grantor, Addresses[0], tokenAddress, tokenId, RoleId, expirationDate, data)
+    validateRole(grantor, Addresses[1], tokenAddress, tokenId, RoleId, expirationDate, data)
+    validateRole(grantor, Addresses[2], tokenAddress, tokenId, RoleId, expirationDate, data)
   })
 
   test('should grant multiple roles for different NFTs', () => {
@@ -181,5 +187,27 @@ describe('ERC-7432 RoleGranted Handler', () => {
 
     assert.entityCount('Role', 3)
     assert.entityCount('Account', 3)
+
+    validateRole(grantor, Addresses[0], tokenAddress, tokenId1, RoleId, expirationDate, data)
+    validateRole(grantor, Addresses[1], tokenAddress, tokenId2, RoleId, expirationDate, data)
+    validateRole(grantor, Addresses[2], tokenAddress, tokenId3, RoleId, expirationDate, data)
   })
 })
+
+function validateRole(
+  grantor: string,
+  grantee: string,
+  tokenAddress: string,
+  tokenId: string,
+  role: string,
+  expirationDate: string,
+  data: string,
+): void {
+  const _id = generateRoleId(grantor, grantee, tokenAddress, tokenId, role)
+  assert.fieldEquals('Role', _id, 'roleId', RoleId)
+  assert.fieldEquals('Role', _id, 'nft', generateNftId(tokenId, tokenAddress))
+  assert.fieldEquals('Role', _id, 'grantor', grantor)
+  assert.fieldEquals('Role', _id, 'grantee', grantee)
+  assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
+  assert.fieldEquals('Role', _id, 'data', data)
+}

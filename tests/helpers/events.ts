@@ -3,7 +3,7 @@ import { Transfer } from '../../generated/ERC721-Chronos-Traveler/ERC721'
 import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { RoleGranted, RoleRevoked } from '../../generated/ERC7432-Immutable-Roles/ERC7432'
 
-function createTransferEvent(from: string, to: string, tokenId: string, address: string): Transfer {
+export function createTransferEvent(from: string, to: string, tokenId: string, address: string): Transfer {
   const event = changetype<Transfer>(newMockEvent())
   event.parameters = new Array<ethereum.EventParam>()
   event.parameters.push(buildEventParamAddress('from', from))
@@ -13,7 +13,7 @@ function createTransferEvent(from: string, to: string, tokenId: string, address:
   return event
 }
 
-function createNewRoleRevokedEvent(
+export function createNewRoleRevokedEvent(
   role: string,
   tokenId: string,
   tokenAddress: string,
@@ -32,7 +32,7 @@ function createNewRoleRevokedEvent(
   return event
 }
 
-function createNewRoleGrantedEvent(
+export function createNewRoleGrantedEvent(
   role: string,
   tokenId: string,
   tokenAddress: string,
@@ -57,6 +57,16 @@ function createNewRoleGrantedEvent(
   return event
 }
 
+export function generateRoleId(
+  grantor: string,
+  grantee: string,
+  tokenAddress: string,
+  tokenId: string,
+  role: string,
+): string {
+  return `${grantor}-${tokenAddress}-${tokenId}-${grantee}-${role}`
+}
+
 function buildEventParamBoolean(name: string, value: boolean): ethereum.EventParam {
   const ethAddress = ethereum.Value.fromBoolean(value)
   return new ethereum.EventParam(name, ethAddress)
@@ -76,5 +86,3 @@ function buildEventParamBytes(name: string, value: string): ethereum.EventParam 
   const ethValue = ethereum.Value.fromFixedBytes(Bytes.fromHexString(value))
   return new ethereum.EventParam(name, ethValue)
 }
-
-export { createTransferEvent, createNewRoleGrantedEvent, createNewRoleRevokedEvent }
