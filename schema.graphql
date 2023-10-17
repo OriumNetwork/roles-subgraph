@@ -18,5 +18,6 @@ type Role @entity {
   grantor: Account!
   grantee: Account!
   expirationDate: BigInt!
+  revocable: Boolean!
   data: Bytes!
 }

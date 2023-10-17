@@ -2,15 +2,35 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
-  # There is no "(Chronos) Traveler" on Mumbai
+  - name: ERC721-Chronos-Traveler
+    kind: ethereum
+    network: matic
+    source:
+      address: '0xa03C4E40d1fCaa826591007a17Ca929ef8AdBF1C'
+      abi: ERC721
+      startBlock: 36796276
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Nft
+        - Account
+      abis:
+        - name: ERC721
+          file: ./abis/ERC721.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/erc721/index.ts
 
   - name: ERC7432-Immutable-Roles
     kind: ethereum
-    network: mumbai
+    network: matic
     source:
       address: '0xb2ad616e84e1ef7a9ed0fa3169aaf31ee51ea824'
       abi: ERC7432
-      startBlock: 40877849
+      startBlock: 48672001
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

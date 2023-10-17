@@ -1,55 +1,31 @@
 import { log } from '@graphprotocol/graph-ts'
-import { RoleGranted } from '../../../generated/Roles/ERC7432Roles'
-import { Account, Nft, Role } from '../../../generated/schema'
-import { generateNftId, generateRoleId } from '../../utils/helper'
+import { RoleGranted } from '../../../generated/ERC7432-Immutable-Roles/ERC7432'
+import { Account, Nft } from '../../../generated/schema'
+import { generateNftId, findOrCreateAccount, findOrCreateRole } from '../../utils/helper'
 
 export function handleRoleGranted(event: RoleGranted): void {
   const tokenId = event.params._tokenId.toString()
-  const tokenAddress = event.params._tokenAddress.toHexString()
+  const tokenAddress = event.params._tokenAddress.toHex()
 
-  const nftId = generateNftId(tokenId, tokenAddress)
+  const nftId = generateNftId(tokenAddress, tokenId)
   const nft = Nft.load(nftId)
-
   if (!nft) {
     log.warning('[handleRoleGranted] NFT {} does not exist, skipping...', [nftId])
     return
   }
 
-  const address = event.transaction.from.toHexString()
-  const grantor = Account.load(address)
-
-  if (!grantor) {
-    log.warning('[handleRoleGranted] grantor {} does not exist, skipping...', [address])
+  const grantorAddress = event.params._grantor.toHex().toLowerCase()
+  const grantorAccount = Account.load(grantorAddress)
+  if (!grantorAccount) {
+    log.warning('[handleRoleGranted] grantor {} does not exist, skipping...', [grantorAddress])
+    return
+  }
+  if (grantorAccount.id != nft.owner) {
+    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping...', [nftId, grantorAccount.id])
     return
   }
 
-  if (grantor.id != nft.owner) {
-    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping...', [nftId, grantor.id])
-    return
-  }
-
-  const granteeId = event.params._grantee.toHex()
-  let grantee = Account.load(granteeId)
-
-  if (!grantee) {
-    grantee = new Account(granteeId)
-    grantee.save()
-  }
-
-  const roleId = generateRoleId(grantor.id, nft.id, grantee.id, event.params._role.toHex())
-  let role = Role.load(roleId)
-
-  if (!role) {
-    role = new Role(roleId)
-  }
-
-  role.roleId = event.params._role
-  role.nft = nft.id
-  role.grantor = grantor.id
-  role.grantee = grantee.id
-  role.expirationDate = event.params._expirationDate
-  role.data = event.params._data
-  role.save()
-
-  log.info('[handleRoleGranted] Role: {} NFT: {} Tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
+  const granteeAccount = findOrCreateAccount(event.params._grantee.toHex())
+  const role = findOrCreateRole(event, grantorAccount, granteeAccount, nft)
+  log.info('[handleRoleGranted] Role: {} NFT: {} Tx: {}', [role.id, nftId, event.transaction.hash.toHex()])
 }
