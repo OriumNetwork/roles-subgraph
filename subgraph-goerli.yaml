@@ -2,7 +2,6 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
-
   - name: ERC721-Chronos-Traveler
     kind: ethereum
     network: goerli
@@ -22,7 +21,7 @@ dataSources:
           file: ./abis/ERC721.json
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleErc721Transfer
+          handler: handleTransfer
       file: ./src/erc721/index.ts
 
   - name: ERC7432-Immutable-Roles

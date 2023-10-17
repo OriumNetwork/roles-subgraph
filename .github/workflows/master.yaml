@@ -22,7 +22,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GHB_TOKEN }}
       - name: Lint
-        run: npm run lint:staged
+        run: npm run lint
       - name: Subgraph Auth
         run: yarn graph:auth -- ${{ secrets.THEGRAPH_API_KEY }}
       - name: Build Goerli
@@ -33,8 +33,8 @@ jobs:
         run: npm run deploy:goerli
       - name: Build Mumbai
         run: npm run build:mumbai
-#      - name: Deploy Mumbai Hosted Service
-#        run: npm run deploy:mumbai
+      #      - name: Deploy Mumbai Hosted Service
+      #        run: npm run deploy:mumbai
       - name: Build Polygon
         run: npm run build:polygon
       - name: Subgraph Deploy Polygon Satsuma

@@ -1,7 +1,7 @@
 import { log } from '@graphprotocol/graph-ts'
 import { RoleGranted } from '../../../generated/ERC7432-Immutable-Roles/ERC7432'
-import { Account, Nft, Role } from '../../../generated/schema'
-import { generateNftId, generateRoleId, findOrCreateAccount } from '../../utils/helper'
+import { Account, Nft } from '../../../generated/schema'
+import { generateNftId, findOrCreateAccount, findOrCreateRole } from '../../utils/helper'
 
 export function handleRoleGranted(event: RoleGranted): void {
   const tokenId = event.params._tokenId.toString()
@@ -15,34 +15,17 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
 
   const grantorAddress = event.params._grantor.toHex().toLowerCase()
-  const grantor = Account.load(grantorAddress)
-  if (!grantor) {
+  const grantorAccount = Account.load(grantorAddress)
+  if (!grantorAccount) {
     log.warning('[handleRoleGranted] grantor {} does not exist, skipping...', [grantorAddress])
     return
   }
-  if (grantor.id != nft.owner) {
-    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping...', [nftId, grantor.id])
+  if (grantorAccount.id != nft.owner) {
+    log.warning('[handleRoleGranted] NFT {} is not owned by {}, skipping...', [nftId, grantorAccount.id])
     return
   }
 
   const granteeAccount = findOrCreateAccount(event.params._grantee.toHex())
-  const role = findOrCreateRole(event, grantor, granteeAccount, nft)
+  const role = findOrCreateRole(event, grantorAccount, granteeAccount, nft)
   log.info('[handleRoleGranted] Role: {} NFT: {} Tx: {}', [role.id, nftId, event.transaction.hash.toHex()])
-}
-
-function findOrCreateRole(event: RoleGranted, grantor: Account, grantee: Account, nft: Nft): Role {
-  const roleId = generateRoleId(grantor, grantee, nft, event.params._role)
-  let role = Role.load(roleId)
-  if (!role) {
-    role = new Role(roleId)
-    role.roleId = event.params._role
-    role.nft = nft.id
-    role.grantor = grantor.id
-    role.grantee = grantee.id
-  }
-  role.expirationDate = event.params._expirationDate
-  role.revocable = event.params._revocable
-  role.data = event.params._data
-  role.save()
-  return role
 }

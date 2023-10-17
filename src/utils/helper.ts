@@ -1,5 +1,6 @@
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { Account, Nft } from '../../generated/schema'
+import { Account, Nft, Role } from '../../generated/schema'
+import { RoleGranted } from '../../generated/ERC7432-Immutable-Roles/ERC7432'
 
 export function findOrCreateAccount(id: string): Account {
   const lowerCaseId = id.toLowerCase()
@@ -26,4 +27,21 @@ export function generateNftId(tokenAddress: string, tokenId: string): string {
 
 export function generateRoleId(grantor: Account, grantee: Account, nft: Nft, role: Bytes): string {
   return grantor.id + '-' + grantee.id + '-' + nft.id + '-' + role.toHex()
+}
+
+export function findOrCreateRole(event: RoleGranted, grantor: Account, grantee: Account, nft: Nft): Role {
+  const roleId = generateRoleId(grantor, grantee, nft, event.params._role)
+  let role = Role.load(roleId)
+  if (!role) {
+    role = new Role(roleId)
+    role.roleId = event.params._role
+    role.nft = nft.id
+    role.grantor = grantor.id
+    role.grantee = grantee.id
+  }
+  role.expirationDate = event.params._expirationDate
+  role.revocable = event.params._revocable
+  role.data = event.params._data
+  role.save()
+  return role
 }

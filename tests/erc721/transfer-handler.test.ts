@@ -1,5 +1,5 @@
 import { assert, describe, test, clearStore, afterAll } from 'matchstick-as'
-import { handleErc721Transfer } from '../../src/erc721'
+import { handleTransfer } from '../../src/erc721'
 import { generateNftId } from '../../src/utils/helper'
 import { createTransferEvent } from '../helpers/events'
 import { Addresses, ZERO_ADDRESS } from '../helpers/contants'
@@ -16,7 +16,7 @@ describe('ERC-721 Transfer Handler', () => {
     assert.entityCount('Account', 0)
 
     const event = createTransferEvent(Addresses[0], Addresses[1], tokenId, ZERO_ADDRESS)
-    handleErc721Transfer(event)
+    handleTransfer(event)
 
     assert.entityCount('Nft', 1)
     assert.entityCount('Account', 1)
@@ -32,7 +32,7 @@ describe('ERC-721 Transfer Handler', () => {
     assert.entityCount('Account', 1)
 
     const event = createTransferEvent(Addresses[1], Addresses[2], tokenId, ZERO_ADDRESS)
-    handleErc721Transfer(event)
+    handleTransfer(event)
 
     assert.entityCount('Nft', 1)
     assert.entityCount('Account', 2)
@@ -48,7 +48,7 @@ describe('ERC-721 Transfer Handler', () => {
     assert.entityCount('Account', 2)
 
     const event = createTransferEvent(Addresses[0], Addresses[2], tokenId, ZERO_ADDRESS)
-    handleErc721Transfer(event)
+    handleTransfer(event)
 
     assert.entityCount('Nft', 1)
     assert.entityCount('Account', 2)
