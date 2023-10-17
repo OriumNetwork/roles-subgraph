@@ -5,7 +5,7 @@ dataSources:
 
   - name: ERC721-Chronos-Traveler
     kind: ethereum
-    network: polygon
+    network: matic
     source:
       address: '0xa03C4E40d1fCaa826591007a17Ca929ef8AdBF1C'
       abi: ERC721
@@ -27,7 +27,7 @@ dataSources:
 
   - name: ERC7432-Immutable-Roles
     kind: ethereum
-    network: polygon
+    network: matic
     source:
       address: '0xb2ad616e84e1ef7a9ed0fa3169aaf31ee51ea824'
       abi: ERC7432
