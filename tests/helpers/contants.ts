@@ -1,3 +1,5 @@
+import { BigInt } from '@graphprotocol/graph-ts'
+
 export const Addresses = [
   '0x1111111111111111111111111111111111111111',
   '0x2222222222222222222222222222222222222222',
@@ -5,3 +7,5 @@ export const Addresses = [
 ]
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const ONE = BigInt.fromI32(1)
+export const TWO = BigInt.fromI32(2)

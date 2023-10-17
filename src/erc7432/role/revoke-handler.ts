@@ -1,5 +1,5 @@
-import { BigInt, log } from '@graphprotocol/graph-ts'
-import { RoleRevoked } from '../../../generated/Roles/ERC7432Roles'
+import { log } from '@graphprotocol/graph-ts'
+import { RoleRevoked } from '../../../generated/ERC7432-Immutable-Roles/ERC7432'
 import { Account, Nft, Role } from '../../../generated/schema'
 import { generateNftId, generateRoleId } from '../../utils/helper'
 
@@ -7,44 +7,39 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   const tokenId = event.params._tokenId.toString()
   const tokenAddress = event.params._tokenAddress.toHexString()
 
-  const nftId = generateNftId(tokenId, tokenAddress)
+  const nftId = generateNftId(tokenAddress, tokenId)
   const nft = Nft.load(nftId)
-
   if (!nft) {
     log.warning('[handleRoleRevoked] NFT {} does not exist, skipping...', [nftId])
     return
   }
 
-  const address = event.transaction.from.toHexString()
-  const grantor = Account.load(address)
-  if (!grantor) {
-    log.warning('[handleRoleGranted] grantor {} does not exist, skipping...', [address])
+  const revokerAddress = event.params._revoker.toHex().toLowerCase()
+  const revoker = Account.load(revokerAddress)
+  if (!revoker) {
+    log.warning('[handleRoleGranted] revoker {} does not exist, skipping...', [revokerAddress])
     return
   }
 
-  if (grantor.id != nft.owner) {
-    log.warning('[handleRoleRevoked] NFT {} is not owned by {}, skipping...', [nftId, grantor.id])
-    return
-  }
-
-  const granteeId = event.params._grantee.toHex()
-  const grantee = Account.load(granteeId)
-
+  const granteeAddress = event.params._grantee.toHex().toLowerCase()
+  const grantee = Account.load(granteeAddress)
   if (!grantee) {
-    log.warning('[handleRoleGranted] grantee {} does not exist, skipping...', [address])
+    log.warning('[handleRoleGranted] grantee {} does not exist, skipping...', [granteeAddress])
     return
   }
 
-  const roleId = generateRoleId(grantor.id, nft.id, grantee.id, event.params._role.toHex())
+  const roleId = generateRoleId(revoker, grantee, nft, event.params._role)
   const role = Role.load(roleId)
-
   if (!role) {
     log.warning('[handleRoleRevoked] Role {} does not exist, skipping...', [roleId])
     return
   }
+  if (event.block.timestamp > role.expirationDate) {
+    log.warning('[handleRoleRevoked] Role {} already expired, skipping...', [roleId])
+    return
+  }
 
-  role.expirationDate = new BigInt(0)
+  role.expirationDate = event.block.timestamp
   role.save()
-
-  log.info('[handleRoleRevoked] Role: {} NFT: {} Tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
+  log.info('[handleRoleRevoked] Revoked Role: {} NFT: {} Tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
 }

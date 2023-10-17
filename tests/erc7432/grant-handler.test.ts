@@ -1,11 +1,10 @@
 import { assert, describe, test, clearStore, afterEach } from 'matchstick-as'
 import { createNewRoleGrantedEvent } from '../helpers/events'
 import { handleRoleGranted } from '../../src/erc7432'
-import { Addresses, ZERO_ADDRESS } from '../helpers/contants'
-import { Bytes } from '@graphprotocol/graph-ts'
-import { createMockAccount, createMockNft } from '../helpers/entities'
-import { generateRoleId } from '../../src/utils/helper'
-import { Nft, Account } from '../../generated/schema'
+import { Addresses } from '../helpers/contants'
+import { BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { createMockAccount, createMockNft, validateRole } from '../helpers/entities'
+import { Account } from '../../generated/schema'
 
 const RoleId = Bytes.fromUTF8('0xGrantRole')
 const tokenAddress = Addresses[0]
@@ -14,7 +13,7 @@ const grantee = Addresses[1]
 const grantor = Addresses[2]
 const revocable = true
 const data = Bytes.fromUTF8('0x1234567890')
-const expirationDate = '99999'
+const expirationDate = BigInt.fromI32(99999)
 
 describe('ERC-7432 RoleGranted Handler', () => {
   afterEach(() => {
@@ -34,7 +33,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       revocable,
       data,
-      ZERO_ADDRESS,
     )
     handleRoleGranted(event)
 
@@ -56,7 +54,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       revocable,
       data,
-      ZERO_ADDRESS,
     )
     handleRoleGranted(event)
 
@@ -79,7 +76,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       revocable,
       data,
-      ZERO_ADDRESS,
     )
     handleRoleGranted(event)
 
@@ -101,7 +97,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       revocable,
       data,
-      ZERO_ADDRESS,
     )
     handleRoleGranted(event1)
     const event2 = createNewRoleGrantedEvent(
@@ -113,7 +108,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       revocable,
       data,
-      ZERO_ADDRESS,
     )
     handleRoleGranted(event2)
     const event3 = createNewRoleGrantedEvent(
@@ -125,7 +119,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       revocable,
       data,
-      ZERO_ADDRESS,
     )
     handleRoleGranted(event3)
 
@@ -158,7 +151,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       revocable,
       data,
-      ZERO_ADDRESS,
     )
     handleRoleGranted(event1)
     const event2 = createNewRoleGrantedEvent(
@@ -170,7 +162,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       revocable,
       data,
-      ZERO_ADDRESS,
     )
     handleRoleGranted(event2)
     const event3 = createNewRoleGrantedEvent(
@@ -182,7 +173,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       revocable,
       data,
-      ZERO_ADDRESS,
     )
     handleRoleGranted(event3)
 
@@ -195,20 +185,3 @@ describe('ERC-7432 RoleGranted Handler', () => {
     validateRole(grantorAccount, new Account(Addresses[2]), nft3, RoleId, expirationDate, data)
   })
 })
-
-function validateRole(
-  grantor: Account,
-  grantee: Account,
-  nft: Nft,
-  role: Bytes,
-  expirationDate: string,
-  data: Bytes,
-): void {
-  const _id = generateRoleId(grantor, grantee, nft, role)
-  assert.fieldEquals('Role', _id, 'roleId', RoleId.toHex())
-  assert.fieldEquals('Role', _id, 'nft', nft.id)
-  assert.fieldEquals('Role', _id, 'grantor', grantor.id)
-  assert.fieldEquals('Role', _id, 'grantee', grantee.id)
-  assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
-  assert.fieldEquals('Role', _id, 'data', data.toHex())
-}
