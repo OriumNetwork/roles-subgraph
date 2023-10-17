@@ -10,6 +10,8 @@
   "scripts": {
     "graph:auth": "graph auth --product hosted-service",
     "build:goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:mumbai": "cp subgraph-mumbai.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:polygon": "cp subgraph-polygon.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-goerli",
     "test": "graph test",
     "coverage": "graph test -- -c",
