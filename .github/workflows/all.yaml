@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: ['*', '!master', '!dev', '!qa']
+    branches: ['*', '!master', '!qa']
 
 jobs:
   build_test_deploy:

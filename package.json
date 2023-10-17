@@ -13,6 +13,8 @@
     "build:mumbai": "cp subgraph-mumbai.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "build:polygon": "cp subgraph-polygon.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-goerli",
+    "deploy:mumbai": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-mumbai",
+    "deploy:polygon": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-polygon",
     "test": "graph test",
     "coverage": "graph test -- -c",
     "lint": "npx eslint src/",
