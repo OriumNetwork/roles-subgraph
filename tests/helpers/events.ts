@@ -14,7 +14,7 @@ export function createTransferEvent(from: string, to: string, tokenId: string, a
 }
 
 export function createNewRoleRevokedEvent(
-  role: string,
+  role: Bytes,
   tokenId: string,
   tokenAddress: string,
   revoker: string,
@@ -33,14 +33,14 @@ export function createNewRoleRevokedEvent(
 }
 
 export function createNewRoleGrantedEvent(
-  role: string,
+  role: Bytes,
   tokenId: string,
   tokenAddress: string,
   grantee: string,
   grantor: string,
   expirationDate: string,
   revocable: boolean,
-  data: string,
+  data: Bytes,
   address: string,
 ): RoleGranted {
   const event = changetype<RoleGranted>(newMockEvent())
@@ -55,16 +55,6 @@ export function createNewRoleGrantedEvent(
   event.parameters.push(buildEventParamBytes('_data', data))
   event.transaction.from = Address.fromString(address)
   return event
-}
-
-export function generateRoleId(
-  grantor: string,
-  grantee: string,
-  tokenAddress: string,
-  tokenId: string,
-  role: string,
-): string {
-  return `${grantor}-${tokenAddress}-${tokenId}-${grantee}-${role}`
 }
 
 function buildEventParamBoolean(name: string, value: boolean): ethereum.EventParam {
@@ -82,7 +72,7 @@ function buildEventParamUint(name: string, value: string): ethereum.EventParam {
   return new ethereum.EventParam(name, ethValue)
 }
 
-function buildEventParamBytes(name: string, value: string): ethereum.EventParam {
-  const ethValue = ethereum.Value.fromFixedBytes(Bytes.fromHexString(value))
+function buildEventParamBytes(name: string, value: Bytes): ethereum.EventParam {
+  const ethValue = ethereum.Value.fromFixedBytes(value)
   return new ethereum.EventParam(name, ethValue)
 }

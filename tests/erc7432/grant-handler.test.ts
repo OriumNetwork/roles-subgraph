@@ -4,16 +4,16 @@ import { handleRoleGranted } from '../../src/erc7432'
 import { Addresses, ZERO_ADDRESS } from '../helpers/contants'
 import { Bytes } from '@graphprotocol/graph-ts'
 import { createMockAccount, createMockNft } from '../helpers/entities'
-import { generateRoleId } from '../helpers/events'
-import { generateNftId } from '../../src/utils/helper'
+import { generateRoleId } from '../../src/utils/helper'
+import { Nft, Account } from '../../generated/schema'
 
-const RoleId = Bytes.fromUTF8('0xGrantRole').toHex()
+const RoleId = Bytes.fromUTF8('0xGrantRole')
 const tokenAddress = Addresses[0]
 const tokenId = '123'
 const grantee = Addresses[1]
 const grantor = Addresses[2]
 const revocable = true
-const data = '0x1234567890'
+const data = Bytes.fromUTF8('0x1234567890')
 const expirationDate = '99999'
 
 describe('ERC-7432 RoleGranted Handler', () => {
@@ -88,7 +88,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
   })
 
   test('should grant multiple roles for the same NFT', () => {
-    createMockNft(tokenAddress, tokenId, grantor)
+    const nft = createMockNft(tokenAddress, tokenId, grantor)
     assert.entityCount('Role', 0)
     assert.entityCount('Account', 1)
 
@@ -132,9 +132,10 @@ describe('ERC-7432 RoleGranted Handler', () => {
     assert.entityCount('Role', 3)
     assert.entityCount('Account', 3)
 
-    validateRole(grantor, Addresses[0], tokenAddress, tokenId, RoleId, expirationDate, data)
-    validateRole(grantor, Addresses[1], tokenAddress, tokenId, RoleId, expirationDate, data)
-    validateRole(grantor, Addresses[2], tokenAddress, tokenId, RoleId, expirationDate, data)
+    const grantorAccount = new Account(grantor)
+    validateRole(grantorAccount, new Account(Addresses[0]), nft, RoleId, expirationDate, data)
+    validateRole(grantorAccount, new Account(Addresses[1]), nft, RoleId, expirationDate, data)
+    validateRole(grantorAccount, new Account(Addresses[2]), nft, RoleId, expirationDate, data)
   })
 
   test('should grant multiple roles for different NFTs', () => {
@@ -142,9 +143,9 @@ describe('ERC-7432 RoleGranted Handler', () => {
     const tokenId2 = '456'
     const tokenId3 = '789'
 
-    createMockNft(tokenAddress, tokenId1, grantor)
-    createMockNft(tokenAddress, tokenId2, grantor)
-    createMockNft(tokenAddress, tokenId3, grantor)
+    const nft1 = createMockNft(tokenAddress, tokenId1, grantor)
+    const nft2 = createMockNft(tokenAddress, tokenId2, grantor)
+    const nft3 = createMockNft(tokenAddress, tokenId3, grantor)
     assert.entityCount('Role', 0)
     assert.entityCount('Account', 1)
 
@@ -188,26 +189,26 @@ describe('ERC-7432 RoleGranted Handler', () => {
     assert.entityCount('Role', 3)
     assert.entityCount('Account', 3)
 
-    validateRole(grantor, Addresses[0], tokenAddress, tokenId1, RoleId, expirationDate, data)
-    validateRole(grantor, Addresses[1], tokenAddress, tokenId2, RoleId, expirationDate, data)
-    validateRole(grantor, Addresses[2], tokenAddress, tokenId3, RoleId, expirationDate, data)
+    const grantorAccount = new Account(grantor)
+    validateRole(grantorAccount, new Account(Addresses[0]), nft1, RoleId, expirationDate, data)
+    validateRole(grantorAccount, new Account(Addresses[1]), nft2, RoleId, expirationDate, data)
+    validateRole(grantorAccount, new Account(Addresses[2]), nft3, RoleId, expirationDate, data)
   })
 })
 
 function validateRole(
-  grantor: string,
-  grantee: string,
-  tokenAddress: string,
-  tokenId: string,
-  role: string,
+  grantor: Account,
+  grantee: Account,
+  nft: Nft,
+  role: Bytes,
   expirationDate: string,
-  data: string,
+  data: Bytes,
 ): void {
-  const _id = generateRoleId(grantor, grantee, tokenAddress, tokenId, role)
-  assert.fieldEquals('Role', _id, 'roleId', RoleId)
-  assert.fieldEquals('Role', _id, 'nft', generateNftId(tokenId, tokenAddress))
-  assert.fieldEquals('Role', _id, 'grantor', grantor)
-  assert.fieldEquals('Role', _id, 'grantee', grantee)
+  const _id = generateRoleId(grantor, grantee, nft, role)
+  assert.fieldEquals('Role', _id, 'roleId', RoleId.toHex())
+  assert.fieldEquals('Role', _id, 'nft', nft.id)
+  assert.fieldEquals('Role', _id, 'grantor', grantor.id)
+  assert.fieldEquals('Role', _id, 'grantee', grantee.id)
   assert.fieldEquals('Role', _id, 'expirationDate', expirationDate)
-  assert.fieldEquals('Role', _id, 'data', data)
+  assert.fieldEquals('Role', _id, 'data', data.toHex())
 }

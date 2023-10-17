@@ -8,7 +8,7 @@ export function handleErc721Transfer(event: Transfer): void {
 
   const account = findOrCreateAccount(event.params.to.toHex())
 
-  const id = generateNftId(tokenId.toString(), contractAddress)
+  const id = generateNftId(contractAddress, tokenId.toString())
   const nft = Nft.load(id)
   if (!nft) {
     createNft(id, contractAddress, tokenId, account.id)

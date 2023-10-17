@@ -7,7 +7,7 @@ export function handleRoleGranted(event: RoleGranted): void {
   const tokenId = event.params._tokenId.toString()
   const tokenAddress = event.params._tokenAddress.toHex()
 
-  const nftId = generateNftId(tokenId, tokenAddress)
+  const nftId = generateNftId(tokenAddress, tokenId)
   const nft = Nft.load(nftId)
   if (!nft) {
     log.warning('[handleRoleGranted] NFT {} does not exist, skipping...', [nftId])
@@ -26,17 +26,20 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
 
   const granteeAccount = findOrCreateAccount(event.params._grantee.toHex())
-  const role = createRole(event, grantor, granteeAccount, nft)
+  const role = findOrCreateRole(event, grantor, granteeAccount, nft)
   log.info('[handleRoleGranted] Role: {} NFT: {} Tx: {}', [role.id, nftId, event.transaction.hash.toHex()])
 }
 
-function createRole(event: RoleGranted, grantor: Account, grantee: Account, nft: Nft): Role {
-  const roleId = generateRoleId(grantor.id, nft.id, grantee.id, event.params._role.toHex())
-  const role = new Role(roleId)
-  role.roleId = event.params._role
-  role.nft = nft.id
-  role.grantor = grantor.id
-  role.grantee = grantee.id
+function findOrCreateRole(event: RoleGranted, grantor: Account, grantee: Account, nft: Nft): Role {
+  const roleId = generateRoleId(grantor, grantee, nft, event.params._role)
+  let role = Role.load(roleId)
+  if (!role) {
+    role = new Role(roleId)
+    role.roleId = event.params._role
+    role.nft = nft.id
+    role.grantor = grantor.id
+    role.grantee = grantee.id
+  }
   role.expirationDate = event.params._expirationDate
   role.revocable = event.params._revocable
   role.data = event.params._data

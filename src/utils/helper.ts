@@ -1,4 +1,4 @@
-import { BigInt } from '@graphprotocol/graph-ts'
+import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import { Account, Nft } from '../../generated/schema'
 
 export function findOrCreateAccount(id: string): Account {
@@ -20,10 +20,10 @@ export function createNft(id: string, contractAddress: string, tokenId: BigInt, 
   return nft
 }
 
-export function generateNftId(tokenId: string, tokenAddress: string): string {
+export function generateNftId(tokenAddress: string, tokenId: string): string {
   return tokenAddress + '-' + tokenId
 }
 
-export function generateRoleId(grantor: string, nftId: string, grantee: string, role: string): string {
-  return grantor + '-' + nftId + '-' + grantee + '-' + role
+export function generateRoleId(grantor: Account, grantee: Account, nft: Nft, role: Bytes): string {
+  return grantor.id + '-' + grantee.id + '-' + nft.id + '-' + role.toHex()
 }
