@@ -31,8 +31,8 @@ jobs:
         run: npm run build:polygon
       - name: Test
         run: npm run test
-      #      - name: Delete Satsuma Polygon QA
-      #        run: |
-      #          curl -X DELETE https://app.satsuma.xyz/api/subgraphs/8c268d3e8b83112a7d0c732a9b88ba1c732da600bffaf68790171b9a0b5d5394/orium-subgraph/qa/delete -H 'x-api-key: ${{ secrets.SATSUMA_DEPLOY_KEY }}'
+      - name: Delete Satsuma Polygon QA
+        run: |
+          curl -X DELETE https://app.satsuma.xyz/api/subgraphs/8c268d3e8b83112a7d0c732a9b88ba1c732da600bffaf68790171b9a0b5d5394/polygon-roles-registry/qa/delete -H 'x-api-key: ${{ secrets.SATSUMA_DEPLOY_KEY }}'
       - name: Deploy Satsuma Polygon QA
         run: npx graph deploy polygon-roles-registry --version-label qa --node https://app.satsuma.xyz/api/subgraphs/deploy --ipfs https://ipfs.satsuma.xyz --deploy-key ${{ secrets.SATSUMA_DEPLOY_KEY }}
