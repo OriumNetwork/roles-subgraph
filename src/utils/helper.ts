@@ -1,4 +1,4 @@
-import { BigInt, Bytes, log, store } from '@graphprotocol/graph-ts'
+import { BigInt, Bytes, store } from '@graphprotocol/graph-ts'
 import { Account, Nft, Role, RoleApproval } from '../../generated/schema'
 import { RoleGranted } from '../../generated/ERC7432-Immutable-Roles/ERC7432'
 
@@ -67,6 +67,5 @@ export function deleteRoleApprovalIfExist(roleApprovalId: string): void {
   const roleApproval = RoleApproval.load(roleApprovalId)
   if (roleApproval) {
     store.remove('RoleApproval', roleApprovalId)
-    log.info('[handleRoleApprovalForAll] Removing Role Approval: {}', [roleApproval.id])
   }
 }

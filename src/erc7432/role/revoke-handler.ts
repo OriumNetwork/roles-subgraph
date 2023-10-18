@@ -41,5 +41,5 @@ export function handleRoleRevoked(event: RoleRevoked): void {
 
   role.expirationDate = event.block.timestamp
   role.save()
-  log.info('[handleRoleRevoked] Revoked Role: {} NFT: {} Tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
+  log.warning('[handleRoleRevoked] Revoked Role: {} NFT: {} Tx: {}', [roleId, nftId, event.transaction.hash.toHex()])
 }

@@ -13,43 +13,47 @@ describe('ERC-7432 RoleApprovalForAll Handler', () => {
     clearStore()
   })
 
-  test('should not do anything when approval does not exist and is set to false', () => {
-    assert.entityCount('RoleApproval', 0)
+  describe('When RoleApproval exists', () => {
+    test('should remove approval when is set to false', () => {
+      createMockRoleApproval(grantor, operator, tokenAddress)
+      assert.entityCount('RoleApproval', 1)
 
-    const event = createNewRoleApprovalForAllEvent(grantor, operator, tokenAddress, false)
-    handleRoleApprovalForAll(event)
+      const event = createNewRoleApprovalForAllEvent(grantor, operator, tokenAddress, false)
+      handleRoleApprovalForAll(event)
 
-    assert.entityCount('RoleApproval', 0)
+      assert.entityCount('RoleApproval', 0)
+    })
+
+    test('should not do anything when is set to true', () => {
+      createMockRoleApproval(grantor, operator, tokenAddress)
+      assert.entityCount('RoleApproval', 1)
+
+      const event = createNewRoleApprovalForAllEvent(grantor, operator, tokenAddress, true)
+      handleRoleApprovalForAll(event)
+
+      assert.entityCount('RoleApproval', 1)
+      validateRoleApproval(grantor, operator, tokenAddress)
+    })
   })
 
-  test('should create approval when approval does not exist and is set to true', () => {
-    assert.entityCount('RoleApproval', 0)
+  describe('When RoleApproval does not exist', () => {
+    test('should not do anything when approval is set to false', () => {
+      assert.entityCount('RoleApproval', 0)
 
-    const event = createNewRoleApprovalForAllEvent(grantor, operator, tokenAddress, true)
-    handleRoleApprovalForAll(event)
+      const event = createNewRoleApprovalForAllEvent(grantor, operator, tokenAddress, false)
+      handleRoleApprovalForAll(event)
 
-    assert.entityCount('RoleApproval', 1)
-    validateRoleApproval(grantor, operator, tokenAddress)
-  })
+      assert.entityCount('RoleApproval', 0)
+    })
 
-  test('should remove approval when approval exists and is set to false', () => {
-    createMockRoleApproval(grantor, operator, tokenAddress)
-    assert.entityCount('RoleApproval', 1)
+    test('should create approval when approval is set to true', () => {
+      assert.entityCount('RoleApproval', 0)
 
-    const event = createNewRoleApprovalForAllEvent(grantor, operator, tokenAddress, false)
-    handleRoleApprovalForAll(event)
+      const event = createNewRoleApprovalForAllEvent(grantor, operator, tokenAddress, true)
+      handleRoleApprovalForAll(event)
 
-    assert.entityCount('RoleApproval', 0)
-  })
-
-  test('should not do anything when approval exists and is set to true', () => {
-    createMockRoleApproval(grantor, operator, tokenAddress)
-    assert.entityCount('RoleApproval', 1)
-
-    const event = createNewRoleApprovalForAllEvent(grantor, operator, tokenAddress, true)
-    handleRoleApprovalForAll(event)
-
-    assert.entityCount('RoleApproval', 1)
-    validateRoleApproval(grantor, operator, tokenAddress)
+      assert.entityCount('RoleApproval', 1)
+      validateRoleApproval(grantor, operator, tokenAddress)
+    })
   })
 })
