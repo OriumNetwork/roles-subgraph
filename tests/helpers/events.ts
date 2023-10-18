@@ -1,7 +1,7 @@
 import { newMockEvent } from 'matchstick-as'
 import { Transfer } from '../../generated/ERC721-Chronos-Traveler/ERC721'
 import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
-import { RoleGranted, RoleRevoked } from '../../generated/ERC7432-Immutable-Roles/ERC7432'
+import { RoleGranted, RoleRevoked, RoleApprovalForAll } from '../../generated/ERC7432-Immutable-Roles/ERC7432'
 import { Nft } from '../../generated/schema'
 
 export function createTransferEvent(from: string, to: string, tokenId: string, address: string): Transfer {
@@ -45,6 +45,21 @@ export function createNewRoleGrantedEvent(
   event.parameters.push(buildEventParamUint('_expirationDate', expirationDate))
   event.parameters.push(buildEventParamBoolean('_revocable', revocable))
   event.parameters.push(buildEventParamBytes('_data', data))
+  return event
+}
+
+export function createNewRoleApprovalForAllEvent(
+  grantor: string,
+  operator: string,
+  tokenAddress: string,
+  isApproved: boolean,
+): RoleApprovalForAll {
+  const event = changetype<RoleApprovalForAll>(newMockEvent())
+  event.parameters = new Array<ethereum.EventParam>()
+  event.transaction.from = Address.fromString(grantor)
+  event.parameters.push(buildEventParamAddress('_tokenAddress', tokenAddress))
+  event.parameters.push(buildEventParamAddress('_operator', operator))
+  event.parameters.push(buildEventParamBoolean('_isApproved', isApproved))
   return event
 }
 

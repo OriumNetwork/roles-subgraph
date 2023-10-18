@@ -27,5 +27,5 @@ export function handleRoleGranted(event: RoleGranted): void {
 
   const granteeAccount = findOrCreateAccount(event.params._grantee.toHex())
   const role = findOrCreateRole(event, grantorAccount, granteeAccount, nft)
-  log.info('[handleRoleGranted] Role: {} NFT: {} Tx: {}', [role.id, nftId, event.transaction.hash.toHex()])
+  log.warning('[handleRoleGranted] Role: {} NFT: {} Tx: {}', [role.id, nftId, event.transaction.hash.toHex()])
 }

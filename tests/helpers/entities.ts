@@ -1,6 +1,6 @@
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { Account, Nft, Role } from '../../generated/schema'
-import { generateNftId, generateRoleId } from '../../src/utils/helper'
+import { Account, Nft, Role, RoleApproval } from '../../generated/schema'
+import { generateNftId, generateRoleId, generateRoleApprovalId } from '../../src/utils/helper'
 import { assert } from 'matchstick-as'
 
 export function createMockNft(tokenAddress: string, tokenId: string, ownerAddress: string): Nft {
@@ -35,6 +35,16 @@ export function createMockRole(role: Bytes, grantor: string, grantee: string, nf
   return newRole
 }
 
+export function createMockRoleApproval(grantor: string, operator: string, tokenAddress: string): RoleApproval {
+  const roleApprovalId = generateRoleApprovalId(new Account(grantor), new Account(operator), tokenAddress)
+  const roleApproval = new RoleApproval(roleApprovalId)
+  roleApproval.grantor = grantor
+  roleApproval.operator = operator
+  roleApproval.tokenAddress = tokenAddress
+  roleApproval.save()
+  return roleApproval
+}
+
 export function validateRole(
   grantor: Account,
   grantee: Account,
@@ -50,4 +60,15 @@ export function validateRole(
   assert.fieldEquals('Role', _id, 'grantee', grantee.id)
   assert.fieldEquals('Role', _id, 'expirationDate', expirationDate.toString())
   assert.fieldEquals('Role', _id, 'data', data.toHex())
+}
+
+export function validateRoleApproval(grantor: string, operator: string, tokenAddress: string): void {
+  const roleApprovalId = generateRoleApprovalId(
+    new Account(grantor.toLowerCase()),
+    new Account(operator.toLowerCase()),
+    tokenAddress,
+  )
+  assert.fieldEquals('RoleApproval', roleApprovalId, 'grantor', grantor)
+  assert.fieldEquals('RoleApproval', roleApprovalId, 'operator', operator)
+  assert.fieldEquals('RoleApproval', roleApprovalId, 'tokenAddress', tokenAddress)
 }

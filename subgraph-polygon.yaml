@@ -39,6 +39,7 @@ dataSources:
         - Nft
         - Account
         - Role
+        - RoleApproval
       abis:
         - name: ERC7432
           file: ./abis/ERC7432.json
@@ -47,4 +48,6 @@ dataSources:
           handler: handleRoleGranted
         - event: RoleRevoked(indexed bytes32,indexed address,indexed uint256,address,address)
           handler: handleRoleRevoked
+        - event: RoleApprovalForAll(indexed address,indexed address,bool)
+          handler: handleRoleApprovalForAll
       file: ./src/erc7432/index.ts
