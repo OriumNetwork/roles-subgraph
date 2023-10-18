@@ -9,6 +9,7 @@ type Nft @entity {
 type Account @entity {
   id: ID! # address
   nfts: [Nft!] @derivedFrom(field: "owner")
+  roleApprovals: [RoleApproval!] @derivedFrom(field: "grantor")
 }
 
 type Role @entity {
@@ -20,4 +21,11 @@ type Role @entity {
   expirationDate: BigInt!
   revocable: Boolean!
   data: Bytes!
+}
+
+type RoleApproval @entity {
+  id: ID! # grantorAddress + operatorAddress + tokenAddress
+  grantor: Account!
+  operator: Account!
+  tokenAddress: String!
 }

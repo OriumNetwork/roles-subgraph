@@ -1,5 +1,5 @@
-import { BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { Account, Nft, Role } from '../../generated/schema'
+import { BigInt, Bytes, store } from '@graphprotocol/graph-ts'
+import { Account, Nft, Role, RoleApproval } from '../../generated/schema'
 import { RoleGranted } from '../../generated/ERC7432-Immutable-Roles/ERC7432'
 
 export function findOrCreateAccount(id: string): Account {
@@ -44,4 +44,29 @@ export function findOrCreateRole(event: RoleGranted, grantor: Account, grantee: 
   role.data = event.params._data
   role.save()
   return role
+}
+
+export function generateRoleApprovalId(grantor: Account, operator: Account, tokenAddress: string): string {
+  return grantor.id + '-' + operator.id + '-' + tokenAddress.toLowerCase()
+}
+
+export function insertRoleApprovalIfNotExist(grantor: Account, operator: Account, tokenAddress: string): RoleApproval {
+  const roleApprovalId = generateRoleApprovalId(grantor, operator, tokenAddress)
+  let roleApproval = RoleApproval.load(roleApprovalId)
+  if (!roleApproval) {
+    roleApproval = new RoleApproval(roleApprovalId)
+    roleApproval.grantor = grantor.id
+    roleApproval.operator = operator.id
+    roleApproval.tokenAddress = tokenAddress.toLowerCase()
+    roleApproval.save()
+  }
+  return roleApproval
+}
+
+export function deleteRoleApprovalIfExist(grantor: Account, operator: Account, tokenAddress: string): void {
+  const roleApprovalId = generateRoleApprovalId(grantor, operator, tokenAddress)
+  const roleApproval = RoleApproval.load(roleApprovalId)
+  if (roleApproval) {
+    store.remove('RoleApproval', roleApprovalId)
+  }
 }
