@@ -1,5 +1,10 @@
 import { RoleApprovalForAll } from '../../../generated/ERC7432-Immutable-Roles/ERC7432'
-import { findOrCreateAccount, insertRoleApprovalIfNotExist, deleteRoleApprovalIfExist } from '../../utils/helper'
+import {
+  findOrCreateAccount,
+  insertRoleApprovalIfNotExist,
+  deleteRoleApprovalIfExist,
+  generateRoleApprovalId,
+} from '../../utils/helper'
 import { log } from '@graphprotocol/graph-ts'
 
 export function handleRoleApprovalForAll(event: RoleApprovalForAll): void {
@@ -13,8 +18,9 @@ export function handleRoleApprovalForAll(event: RoleApprovalForAll): void {
 
   if (isApproved) {
     const roleApproval = insertRoleApprovalIfNotExist(grantorAccount, operatorAccount, tokenAddress)
-    log.info('[handleRoleGranted] Updated Role Approval: {}', [roleApproval.id])
+    log.info('[handleRoleApprovalForAll] Updated Role Approval: {}', [roleApproval.id])
   } else {
-    deleteRoleApprovalIfExist(grantorAccount, operatorAccount, tokenAddress)
+    const roleApprovalId = generateRoleApprovalId(grantorAccount, operatorAccount, tokenAddress)
+    deleteRoleApprovalIfExist(roleApprovalId)
   }
 }
