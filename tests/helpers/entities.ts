@@ -1,6 +1,6 @@
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { Account, Nft, Role, RoleApproval } from '../../generated/schema'
-import { generateNftId, generateRoleId, generateRoleApprovalId } from '../../src/utils/helper'
+import { Account, Nft, RoleAssignment, RoleApproval } from '../../generated/schema'
+import { generateNftId, generateRoleAssignmentId, generateRoleApprovalId } from '../../src/utils/helper'
 import { assert } from 'matchstick-as'
 
 export function createMockNft(tokenAddress: string, tokenId: string, ownerAddress: string): Nft {
@@ -21,18 +21,19 @@ export function createMockAccount(ethAddress: string): Account {
   return account
 }
 
-export function createMockRole(role: Bytes, grantor: string, grantee: string, nft: Nft, expirationDate: BigInt): Role {
-  const roleId = generateRoleId(new Account(grantor), new Account(grantee), nft, role)
-  const newRole = new Role(roleId)
-  newRole.roleId = role
-  newRole.nft = nft.id
-  newRole.grantor = grantor
-  newRole.grantee = grantee
-  newRole.expirationDate = expirationDate
-  newRole.revocable = true
-  newRole.data = Bytes.fromUTF8('data')
-  newRole.save()
-  return newRole
+export function createMockRoleAssignment(roleHash: Bytes, grantor: string, grantee: string, nft: Nft, expirationDate: BigInt): RoleAssignment {
+  const roleAssignmentId = generateRoleAssignmentId(new Account(grantor), new Account(grantee), nft, roleHash)
+  const newRoleAssignment = new RoleAssignment(roleAssignmentId)
+  newRoleAssignment.role = `${nft.id}-${roleHash.toHex()}`
+  newRoleAssignment.nft = nft.id
+  newRoleAssignment.grantor = grantor
+  newRoleAssignment.grantee = grantee
+  newRoleAssignment.expirationDate = expirationDate
+  newRoleAssignment.revocable = true
+  newRoleAssignment.data = Bytes.fromUTF8('data')
+  newRoleAssignment.timestamp = BigInt.fromI32(123)
+  newRoleAssignment.save()
+  return newRoleAssignment
 }
 
 export function createMockRoleApproval(grantor: string, operator: string, tokenAddress: string): RoleApproval {
@@ -49,17 +50,17 @@ export function validateRole(
   grantor: Account,
   grantee: Account,
   nft: Nft,
-  role: Bytes,
+  roleAssignment: Bytes,
   expirationDate: BigInt,
   data: Bytes,
 ): void {
-  const _id = generateRoleId(grantor, grantee, nft, role)
-  assert.fieldEquals('Role', _id, 'roleId', role.toHex())
-  assert.fieldEquals('Role', _id, 'nft', nft.id)
-  assert.fieldEquals('Role', _id, 'grantor', grantor.id)
-  assert.fieldEquals('Role', _id, 'grantee', grantee.id)
-  assert.fieldEquals('Role', _id, 'expirationDate', expirationDate.toString())
-  assert.fieldEquals('Role', _id, 'data', data.toHex())
+  const _id = generateRoleAssignmentId(grantor, grantee, nft, roleAssignment)
+  assert.fieldEquals('RoleAssignment', _id, 'role', `${nft.id}-${roleAssignment.toHex()}`)
+  assert.fieldEquals('RoleAssignment', _id, 'nft', nft.id)
+  assert.fieldEquals('RoleAssignment', _id, 'grantor', grantor.id)
+  assert.fieldEquals('RoleAssignment', _id, 'grantee', grantee.id)
+  assert.fieldEquals('RoleAssignment', _id, 'expirationDate', expirationDate.toString())
+  assert.fieldEquals('RoleAssignment', _id, 'data', data.toHex())
 }
 
 export function validateRoleApproval(grantor: string, operator: string, tokenAddress: string): void {

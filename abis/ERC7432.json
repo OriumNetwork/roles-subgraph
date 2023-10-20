@@ -122,7 +122,7 @@
         "components": [
           {
             "internalType": "bytes32",
-            "name": "role",
+            "name": "roleassignment",
             "type": "bytes32"
           },
           {
@@ -172,7 +172,7 @@
         "components": [
           {
             "internalType": "bytes32",
-            "name": "role",
+            "name": "roleassignment",
             "type": "bytes32"
           },
           {

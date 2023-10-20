@@ -18,14 +18,14 @@ export function handleRoleApprovalForAll(event: RoleApprovalForAll): void {
 
   if (isApproved) {
     const roleApproval = insertRoleApprovalIfNotExist(grantorAccount, operatorAccount, tokenAddress)
-    log.warning('[handleRoleApprovalForAll] Updated Role Approval: {} Tx: {}', [
+    log.warning('[handleRoleApprovalForAll] Updated RoleAssignment Approval: {} Tx: {}', [
       roleApproval.id,
       event.transaction.hash.toHex(),
     ])
   } else {
     const roleApprovalId = generateRoleApprovalId(grantorAccount, operatorAccount, tokenAddress)
     deleteRoleApprovalIfExist(roleApprovalId)
-    log.warning('[handleRoleApprovalForAll] Removed Role Approval: {} Tx: {}', [
+    log.warning('[handleRoleApprovalForAll] Removed RoleAssignment Approval: {} Tx: {}', [
       roleApprovalId,
       event.transaction.hash.toHex(),
     ])

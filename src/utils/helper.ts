@@ -1,5 +1,5 @@
 import { BigInt, Bytes, store } from '@graphprotocol/graph-ts'
-import { Account, Nft, Role, RoleApproval } from '../../generated/schema'
+import { Account, Nft, Role, RoleApproval, RoleAssignment } from '../../generated/schema'
 import { RoleGranted } from '../../generated/ERC7432-Immutable-Roles/ERC7432'
 
 export function findOrCreateAccount(id: string): Account {
@@ -25,25 +25,45 @@ export function generateNftId(tokenAddress: string, tokenId: string): string {
   return tokenAddress + '-' + tokenId
 }
 
-export function generateRoleId(grantor: Account, grantee: Account, nft: Nft, role: Bytes): string {
-  return grantor.id + '-' + grantee.id + '-' + nft.id + '-' + role.toHex()
+export function generateRoleAssignmentId(grantor: Account, grantee: Account, nft: Nft, roleAssignment: Bytes): string {
+  return grantor.id + '-' + grantee.id + '-' + nft.id + '-' + roleAssignment.toHex()
 }
 
-export function findOrCreateRole(event: RoleGranted, grantor: Account, grantee: Account, nft: Nft): Role {
-  const roleId = generateRoleId(grantor, grantee, nft, event.params._role)
-  let role = Role.load(roleId)
-  if (!role) {
-    role = new Role(roleId)
-    role.roleId = event.params._role
-    role.nft = nft.id
-    role.grantor = grantor.id
-    role.grantee = grantee.id
+export function findOrCreateRoleAssignment(event: RoleGranted, grantor: Account, grantee: Account, nft: Nft): RoleAssignment {
+  const roleAssignmentId = generateRoleAssignmentId(grantor, grantee, nft, event.params._role)
+  let roleAssignment = RoleAssignment.load(roleAssignmentId)
+
+  if (!roleAssignment) {
+    roleAssignment = new RoleAssignment(roleAssignmentId)
+    roleAssignment.role = findOrCreateRole(nft, event.params._role).id
+    roleAssignment.nft = nft.id
+    roleAssignment.grantor = grantor.id
+    roleAssignment.grantee = grantee.id
   }
-  role.expirationDate = event.params._expirationDate
-  role.revocable = event.params._revocable
-  role.data = event.params._data
-  role.save()
+
+  roleAssignment.expirationDate = event.params._expirationDate
+  roleAssignment.revocable = event.params._revocable
+  roleAssignment.data = event.params._data
+  roleAssignment.timestamp = event.block.timestamp
+  roleAssignment.save()
+  return roleAssignment
+}
+
+export function findOrCreateRole(nft: Nft, roleHash: Bytes): Role {
+
+  let role = Role.load(generateRoleId(nft, roleHash))
+
+  if(!role) {
+    role = new Role(generateRoleId(nft, roleHash))
+    role.roleHash = roleHash
+    role.save()
+  }
+
   return role
+}
+
+export function generateRoleId(nft: Nft, roleHash: Bytes): string {
+  return nft.id + '-' + roleHash.toHex()
 }
 
 export function generateRoleApprovalId(grantor: Account, operator: Account, tokenAddress: string): string {

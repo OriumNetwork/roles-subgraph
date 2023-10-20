@@ -3,26 +3,33 @@ type Nft @entity {
   address: String!
   tokenId: BigInt!
   owner: Account!
-  rolesHistory: [Role!] @derivedFrom(field: "nft")
+  rolesHistory: [RoleAssignment!] @derivedFrom(field: "nft")
 }
 
 type Account @entity {
   id: ID! # address
   nfts: [Nft!] @derivedFrom(field: "owner")
-  rolesGranted: [Role!] @derivedFrom(field: "grantor")
-  rolesReceived: [Role!] @derivedFrom(field: "grantee")
+  rolesGranted: [RoleAssignment!] @derivedFrom(field: "grantor")
+  rolesReceived: [RoleAssignment!] @derivedFrom(field: "grantee")
   roleApprovals: [RoleApproval!] @derivedFrom(field: "grantor")
 }
 
-type Role @entity {
+type RoleAssignment @entity {
   id: ID! # grantorAddress + tokenId + tokenAddress + granteeAddress + roleHash
-  roleId: Bytes!
+  role: Role!
   nft: Nft!
   grantor: Account!
   grantee: Account!
   expirationDate: BigInt!
   revocable: Boolean!
   data: Bytes!
+  timestamp: BigInt!
+}
+
+type Role @entity {
+  id: ID! # tokenId + tokenAddress + roleHash
+  roleHash: Bytes!
+  roleAssignments: [RoleAssignment!] @derivedFrom(field: "role")
 }
 
 type RoleApproval @entity {

@@ -14,10 +14,10 @@ export function createTransferEvent(from: string, to: string, tokenId: string, a
   return event
 }
 
-export function createNewRoleRevokedEvent(role: Bytes, nft: Nft, revoker: string, grantee: string): RoleRevoked {
+export function createNewRoleRevokedEvent(roleassignment: Bytes, nft: Nft, revoker: string, grantee: string): RoleRevoked {
   const event = changetype<RoleRevoked>(newMockEvent())
   event.parameters = new Array<ethereum.EventParam>()
-  event.parameters.push(buildEventParamBytes('_role', role))
+  event.parameters.push(buildEventParamBytes('_role', roleassignment))
   event.parameters.push(buildEventParamAddress('_tokenAddress', nft.address))
   event.parameters.push(buildEventParamUint('_tokenId', nft.tokenId))
   event.parameters.push(buildEventParamAddress('_revoker', revoker))
@@ -26,7 +26,7 @@ export function createNewRoleRevokedEvent(role: Bytes, nft: Nft, revoker: string
 }
 
 export function createNewRoleGrantedEvent(
-  role: Bytes,
+  roleassignment: Bytes,
   tokenId: string,
   tokenAddress: string,
   grantee: string,
@@ -37,7 +37,7 @@ export function createNewRoleGrantedEvent(
 ): RoleGranted {
   const event = changetype<RoleGranted>(newMockEvent())
   event.parameters = new Array<ethereum.EventParam>()
-  event.parameters.push(buildEventParamBytes('_role', role))
+  event.parameters.push(buildEventParamBytes('_role', roleassignment))
   event.parameters.push(buildEventParamAddress('_tokenAddress', tokenAddress))
   event.parameters.push(buildEventParamUint('_tokenId', BigInt.fromString(tokenId)))
   event.parameters.push(buildEventParamAddress('_grantor', grantor))

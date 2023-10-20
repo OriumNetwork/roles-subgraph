@@ -1,7 +1,7 @@
 import { log } from '@graphprotocol/graph-ts'
 import { RoleGranted } from '../../../generated/ERC7432-Immutable-Roles/ERC7432'
 import { Account, Nft } from '../../../generated/schema'
-import { generateNftId, findOrCreateAccount, findOrCreateRole } from '../../utils/helper'
+import { generateNftId, findOrCreateAccount, findOrCreateRoleAssignment } from '../../utils/helper'
 
 export function handleRoleGranted(event: RoleGranted): void {
   const tokenId = event.params._tokenId.toString()
@@ -26,6 +26,6 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
 
   const granteeAccount = findOrCreateAccount(event.params._grantee.toHex())
-  const role = findOrCreateRole(event, grantorAccount, granteeAccount, nft)
-  log.warning('[handleRoleGranted] Role: {} NFT: {} Tx: {}', [role.id, nftId, event.transaction.hash.toHex()])
+  const roleAssignment = findOrCreateRoleAssignment(event, grantorAccount, granteeAccount, nft)
+  log.warning('[handleRoleGranted] roleAssignment: {} NFT: {} Tx: {}', [roleAssignment.id, nftId, event.transaction.hash.toHex()])
 }
