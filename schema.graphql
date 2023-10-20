@@ -3,7 +3,7 @@ type Nft @entity {
   address: String!
   tokenId: BigInt!
   owner: Account!
-  rolesHistory: [RoleAssignment!] @derivedFrom(field: "nft")
+  rolesHistory: [Role!] @derivedFrom(field: "nft")
 }
 
 type Account @entity {
@@ -29,6 +29,7 @@ type RoleAssignment @entity {
 type Role @entity {
   id: ID! # tokenId + tokenAddress + roleHash
   roleHash: Bytes!
+  nft: Nft!
   roleAssignments: [RoleAssignment!] @derivedFrom(field: "role")
 }
 
