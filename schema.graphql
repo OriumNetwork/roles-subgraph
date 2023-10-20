@@ -9,6 +9,8 @@ type Nft @entity {
 type Account @entity {
   id: ID! # address
   nfts: [Nft!] @derivedFrom(field: "owner")
+  rolesGranted: [Role!] @derivedFrom(field: "grantor")
+  rolesReceived: [Role!] @derivedFrom(field: "grantee")
   roleApprovals: [RoleApproval!] @derivedFrom(field: "grantor")
 }
 
