@@ -23,7 +23,7 @@ export function createNewRoleRevokedEvent(
   const event = changetype<RoleRevoked>(newMockEvent())
   event.parameters = new Array<ethereum.EventParam>()
   event.parameters.push(buildEventParamBytes('_role', roleassignment))
-  event.parameters.push(buildEventParamAddress('_tokenAddress', nft.address))
+  event.parameters.push(buildEventParamAddress('_tokenAddress', nft.tokenAddress))
   event.parameters.push(buildEventParamUint('_tokenId', nft.tokenId))
   event.parameters.push(buildEventParamAddress('_revoker', revoker))
   event.parameters.push(buildEventParamAddress('_grantee', grantee))

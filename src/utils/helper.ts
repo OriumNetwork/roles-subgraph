@@ -15,7 +15,7 @@ export function findOrCreateAccount(id: string): Account {
 export function createNft(id: string, contractAddress: string, tokenId: BigInt, owner: string): Nft {
   const nft = new Nft(id)
   nft.tokenId = tokenId
-  nft.address = contractAddress.toLowerCase()
+  nft.tokenAddress = contractAddress.toLowerCase()
   nft.owner = owner.toLowerCase()
   nft.save()
   return nft

@@ -25,7 +25,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
 
     const nftId = generateNftId(tokenAddress, tokenId)
     const nft = new Nft(nftId)
-    nft.address = tokenAddress
+    nft.tokenAddress = tokenAddress
     nft.tokenId = BigInt.fromString(tokenId)
     nft.owner = revoker
 

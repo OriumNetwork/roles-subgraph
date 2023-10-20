@@ -1,9 +1,9 @@
 type Nft @entity {
   id: ID! # tokenId + tokenAddress
-  address: String!
+  tokenAddress: String!
   tokenId: BigInt!
   owner: Account!
-  rolesHistory: [Role!] @derivedFrom(field: "nft")
+  roles: [Role!] @derivedFrom(field: "nft")
 }
 
 type Account @entity {

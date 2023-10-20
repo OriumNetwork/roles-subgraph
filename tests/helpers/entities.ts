@@ -5,7 +5,7 @@ import { assert } from 'matchstick-as'
 
 export function createMockNft(tokenAddress: string, tokenId: string, ownerAddress: string): Nft {
   const nft = new Nft(generateNftId(tokenAddress, tokenId))
-  nft.address = tokenAddress
+  nft.tokenAddress = tokenAddress
   nft.tokenId = BigInt.fromString(tokenId)
 
   const nftOwner = createMockAccount(ownerAddress)
