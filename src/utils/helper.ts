@@ -60,6 +60,7 @@ export function findOrCreateRole(nft: Nft, roleHash: Bytes): Role {
   if (!role) {
     role = new Role(generateRoleId(nft, roleHash))
     role.roleHash = roleHash
+    role.nft = nft.id
     role.save()
   }
 
