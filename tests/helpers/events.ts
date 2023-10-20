@@ -14,7 +14,12 @@ export function createTransferEvent(from: string, to: string, tokenId: string, a
   return event
 }
 
-export function createNewRoleRevokedEvent(roleassignment: Bytes, nft: Nft, revoker: string, grantee: string): RoleRevoked {
+export function createNewRoleRevokedEvent(
+  roleassignment: Bytes,
+  nft: Nft,
+  revoker: string,
+  grantee: string,
+): RoleRevoked {
   const event = changetype<RoleRevoked>(newMockEvent())
   event.parameters = new Array<ethereum.EventParam>()
   event.parameters.push(buildEventParamBytes('_role', roleassignment))

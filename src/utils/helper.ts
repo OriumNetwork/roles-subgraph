@@ -29,7 +29,12 @@ export function generateRoleAssignmentId(grantor: Account, grantee: Account, nft
   return grantor.id + '-' + grantee.id + '-' + nft.id + '-' + roleAssignment.toHex()
 }
 
-export function findOrCreateRoleAssignment(event: RoleGranted, grantor: Account, grantee: Account, nft: Nft): RoleAssignment {
+export function findOrCreateRoleAssignment(
+  event: RoleGranted,
+  grantor: Account,
+  grantee: Account,
+  nft: Nft,
+): RoleAssignment {
   const roleAssignmentId = generateRoleAssignmentId(grantor, grantee, nft, event.params._role)
   let roleAssignment = RoleAssignment.load(roleAssignmentId)
 
@@ -50,10 +55,9 @@ export function findOrCreateRoleAssignment(event: RoleGranted, grantor: Account,
 }
 
 export function findOrCreateRole(nft: Nft, roleHash: Bytes): Role {
-
   let role = Role.load(generateRoleId(nft, roleHash))
 
-  if(!role) {
+  if (!role) {
     role = new Role(generateRoleId(nft, roleHash))
     role.roleHash = roleHash
     role.save()

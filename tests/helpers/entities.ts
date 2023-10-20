@@ -21,7 +21,13 @@ export function createMockAccount(ethAddress: string): Account {
   return account
 }
 
-export function createMockRoleAssignment(roleHash: Bytes, grantor: string, grantee: string, nft: Nft, expirationDate: BigInt): RoleAssignment {
+export function createMockRoleAssignment(
+  roleHash: Bytes,
+  grantor: string,
+  grantee: string,
+  nft: Nft,
+  expirationDate: BigInt,
+): RoleAssignment {
   const roleAssignmentId = generateRoleAssignmentId(new Account(grantor), new Account(grantee), nft, roleHash)
   const newRoleAssignment = new RoleAssignment(roleAssignmentId)
   newRoleAssignment.role = `${nft.id}-${roleHash.toHex()}`
