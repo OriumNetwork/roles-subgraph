@@ -36,6 +36,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
     )
     handleRoleGranted(event)
 
+    assert.entityCount('Role', 0)
     assert.entityCount('RoleAssignment', 0)
     assert.entityCount('Account', 0)
   })
@@ -43,6 +44,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
   test('should not grant roleAssignment when grantor does not exist', () => {
     createMockNft(tokenAddress, tokenId, Addresses[0])
     assert.entityCount('RoleAssignment', 0)
+    assert.entityCount('Role', 0)
     assert.entityCount('Account', 1)
 
     const event = createNewRoleGrantedEvent(
@@ -58,6 +60,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
     handleRoleGranted(event)
 
     assert.entityCount('RoleAssignment', 0)
+    assert.entityCount('Role', 0)
     assert.entityCount('Account', 1)
   })
 
@@ -65,6 +68,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
     createMockNft(tokenAddress, tokenId, Addresses[0])
     createMockAccount(grantor)
     assert.entityCount('RoleAssignment', 0)
+    assert.entityCount('Role', 0)
     assert.entityCount('Account', 2)
 
     const event = createNewRoleGrantedEvent(
@@ -80,12 +84,14 @@ describe('ERC-7432 RoleGranted Handler', () => {
     handleRoleGranted(event)
 
     assert.entityCount('RoleAssignment', 0)
+    assert.entityCount('Role', 0)
     assert.entityCount('Account', 2)
   })
 
   test('should grant multiple roles for the same NFT', () => {
     const nft = createMockNft(tokenAddress, tokenId, grantor)
     assert.entityCount('RoleAssignment', 0)
+    assert.entityCount('Role', 0)
     assert.entityCount('Account', 1)
 
     const event1 = createNewRoleGrantedEvent(
@@ -123,6 +129,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
     handleRoleGranted(event3)
 
     assert.entityCount('RoleAssignment', 3)
+    assert.entityCount('Role', 1)
     assert.entityCount('Account', 3)
 
     const grantorAccount = new Account(grantor)
@@ -140,6 +147,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
     const nft2 = createMockNft(tokenAddress, tokenId2, grantor)
     const nft3 = createMockNft(tokenAddress, tokenId3, grantor)
     assert.entityCount('RoleAssignment', 0)
+    assert.entityCount('Role', 0)
     assert.entityCount('Account', 1)
 
     const event1 = createNewRoleGrantedEvent(
@@ -177,6 +185,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
     handleRoleGranted(event3)
 
     assert.entityCount('RoleAssignment', 3)
+    assert.entityCount('Role', 3)
     assert.entityCount('Account', 3)
 
     const grantorAccount = new Account(grantor)

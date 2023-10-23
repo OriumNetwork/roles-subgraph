@@ -89,6 +89,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     createMockRoleAssignment(RoleAssignmentId, revoker, Addresses[1], nft, expirationDate.plus(ONE))
     createMockRoleAssignment(RoleAssignmentId, revoker, Addresses[2], nft, expirationDate.plus(TWO))
     assert.entityCount('RoleAssignment', 3)
+    assert.entityCount('Role', 1)
 
     const event1 = createNewRoleRevokedEvent(RoleAssignmentId, nft, revoker, Addresses[0])
     handleRoleRevoked(event1)
@@ -100,6 +101,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     handleRoleRevoked(event3)
 
     assert.entityCount('RoleAssignment', 3)
+    assert.entityCount('Role', 1)
     const revokerAccount = new Account(revoker)
     validateRole(revokerAccount, account1, nft, RoleAssignmentId, ONE, data)
     validateRole(revokerAccount, account2, nft, RoleAssignmentId, ONE, data)
@@ -115,6 +117,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     createMockRoleAssignment(RoleAssignmentId, revoker, grantee, nft2, expirationDate.plus(ONE))
     createMockRoleAssignment(RoleAssignmentId, revoker, grantee, nft3, expirationDate.plus(TWO))
     assert.entityCount('RoleAssignment', 3)
+    assert.entityCount('Role', 3)
 
     const event1 = createNewRoleRevokedEvent(RoleAssignmentId, nft1, revoker, grantee)
     handleRoleRevoked(event1)
@@ -126,6 +129,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     handleRoleRevoked(event3)
 
     assert.entityCount('RoleAssignment', 3)
+    assert.entityCount('Role', 3)
     const revokerAccount = new Account(revoker)
     validateRole(revokerAccount, granteeAccount, nft1, RoleAssignmentId, ONE, data)
     validateRole(revokerAccount, granteeAccount, nft2, RoleAssignmentId, ONE, data)
