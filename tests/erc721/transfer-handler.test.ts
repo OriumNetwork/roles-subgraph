@@ -22,7 +22,7 @@ describe('ERC-721 Transfer Handler', () => {
     assert.entityCount('Account', 1)
 
     const _id = generateNftId(event.address.toHexString(), event.params.tokenId.toString())
-    assert.fieldEquals('Nft', _id, 'address', ZERO_ADDRESS)
+    assert.fieldEquals('Nft', _id, 'tokenAddress', ZERO_ADDRESS)
     assert.fieldEquals('Nft', _id, 'tokenId', tokenId)
     assert.fieldEquals('Nft', _id, 'owner', Addresses[1])
   })
@@ -38,7 +38,7 @@ describe('ERC-721 Transfer Handler', () => {
     assert.entityCount('Account', 2)
 
     const _id = generateNftId(event.address.toHexString(), event.params.tokenId.toString())
-    assert.fieldEquals('Nft', _id, 'address', ZERO_ADDRESS)
+    assert.fieldEquals('Nft', _id, 'tokenAddress', ZERO_ADDRESS)
     assert.fieldEquals('Nft', _id, 'tokenId', tokenId)
     assert.fieldEquals('Nft', _id, 'owner', Addresses[2])
   })
@@ -54,7 +54,7 @@ describe('ERC-721 Transfer Handler', () => {
     assert.entityCount('Account', 2)
 
     const _id = generateNftId(event.address.toHexString(), event.params.tokenId.toString())
-    assert.fieldEquals('Nft', _id, 'address', ZERO_ADDRESS)
+    assert.fieldEquals('Nft', _id, 'tokenAddress', ZERO_ADDRESS)
     assert.fieldEquals('Nft', _id, 'tokenId', tokenId)
     assert.fieldEquals('Nft', _id, 'owner', Addresses[2])
   })

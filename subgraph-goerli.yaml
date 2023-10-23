@@ -38,7 +38,7 @@ dataSources:
       entities:
         - Nft
         - Account
-        - Role
+        - RoleAssignment
         - RoleApproval
       abis:
         - name: ERC7432
