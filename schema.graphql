@@ -23,7 +23,7 @@ type RoleAssignment @entity {
   expirationDate: BigInt!
   revocable: Boolean!
   data: Bytes!
-  timestamp: BigInt!
+  createdAt: BigInt!
 }
 
 type Role @entity {

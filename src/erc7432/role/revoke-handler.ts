@@ -29,18 +29,18 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   }
 
   const roleAssignmentId = generateRoleAssignmentId(revoker, grantee, nft, event.params._role)
-  const roleassignment = RoleAssignment.load(roleAssignmentId)
-  if (!roleassignment) {
+  const roleAssignment = RoleAssignment.load(roleAssignmentId)
+  if (!roleAssignment) {
     log.warning('[handleRoleRevoked] RoleAssignment {} does not exist, skipping...', [roleAssignmentId])
     return
   }
-  if (event.block.timestamp > roleassignment.expirationDate) {
+  if (event.block.timestamp > roleAssignment.expirationDate) {
     log.warning('[handleRoleRevoked] RoleAssignment {} already expired, skipping...', [roleAssignmentId])
     return
   }
 
-  roleassignment.expirationDate = event.block.timestamp
-  roleassignment.save()
+  roleAssignment.expirationDate = event.block.timestamp
+  roleAssignment.save()
   log.warning('[handleRoleRevoked] Revoked RoleAssignment: {} NFT: {} Tx: {}', [
     roleAssignmentId,
     nftId,

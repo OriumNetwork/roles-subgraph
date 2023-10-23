@@ -49,7 +49,7 @@ export function findOrCreateRoleAssignment(
   roleAssignment.expirationDate = event.params._expirationDate
   roleAssignment.revocable = event.params._revocable
   roleAssignment.data = event.params._data
-  roleAssignment.timestamp = event.block.timestamp
+  roleAssignment.createdAt = event.block.timestamp
   roleAssignment.save()
   return roleAssignment
 }

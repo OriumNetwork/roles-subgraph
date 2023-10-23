@@ -37,7 +37,7 @@ export function createMockRoleAssignment(
   newRoleAssignment.expirationDate = expirationDate
   newRoleAssignment.revocable = true
   newRoleAssignment.data = Bytes.fromUTF8('data')
-  newRoleAssignment.timestamp = BigInt.fromI32(123)
+  newRoleAssignment.createdAt = BigInt.fromI32(123)
   newRoleAssignment.save()
   return newRoleAssignment
 }

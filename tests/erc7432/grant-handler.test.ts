@@ -20,7 +20,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
     clearStore()
   })
 
-  test('should not grant roleassignment when NFT does not exist', () => {
+  test('should not grant roleAssignment when NFT does not exist', () => {
     assert.entityCount('RoleAssignment', 0)
     assert.entityCount('Account', 0)
 
@@ -40,7 +40,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
     assert.entityCount('Account', 0)
   })
 
-  test('should not grant roleassignment when grantor does not exist', () => {
+  test('should not grant roleAssignment when grantor does not exist', () => {
     createMockNft(tokenAddress, tokenId, Addresses[0])
     assert.entityCount('RoleAssignment', 0)
     assert.entityCount('Account', 1)
@@ -61,7 +61,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
     assert.entityCount('Account', 1)
   })
 
-  test('should not grant roleassignment if grantor is not NFT owner', () => {
+  test('should not grant roleAssignment if grantor is not NFT owner', () => {
     createMockNft(tokenAddress, tokenId, Addresses[0])
     createMockAccount(grantor)
     assert.entityCount('RoleAssignment', 0)

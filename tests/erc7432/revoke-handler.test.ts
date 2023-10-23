@@ -20,7 +20,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     clearStore()
   })
 
-  test('should not revoke roleassignment when NFT does not exist', () => {
+  test('should not revoke roleAssignment when NFT does not exist', () => {
     assert.entityCount('RoleAssignment', 0)
 
     const nftId = generateNftId(tokenAddress, tokenId)
@@ -35,7 +35,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     assert.entityCount('RoleAssignment', 0)
   })
 
-  test('should not revoke roleassignment when revoker does not exist', () => {
+  test('should not revoke roleAssignment when revoker does not exist', () => {
     const nft = createMockNft(tokenAddress, tokenId, Addresses[0])
     assert.entityCount('RoleAssignment', 0)
 
@@ -45,7 +45,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     assert.entityCount('RoleAssignment', 0)
   })
 
-  test('should not revoke roleassignment when grantee does not exist', () => {
+  test('should not revoke roleAssignment when grantee does not exist', () => {
     const nft = createMockNft(tokenAddress, tokenId, revoker)
     assert.entityCount('RoleAssignment', 0)
 
@@ -55,7 +55,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     assert.entityCount('RoleAssignment', 0)
   })
 
-  test('should not revoke roleassignment when roleassignment does not exist', () => {
+  test('should not revoke roleAssignment when roleAssignment does not exist', () => {
     const nft = createMockNft(tokenAddress, tokenId, revoker)
     createMockAccount(grantee)
     assert.entityCount('RoleAssignment', 0)
@@ -66,7 +66,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     assert.entityCount('RoleAssignment', 0)
   })
 
-  test('should not revoke roleassignment when roleassignment already expired', () => {
+  test('should not revoke roleAssignment when roleAssignment already expired', () => {
     const nft = createMockNft(tokenAddress, tokenId, revoker)
     const granteeAccount = createMockAccount(grantee)
     createMockRoleAssignment(RoleAssignmentId, revoker, grantee, nft, BigInt.fromI32(0))
