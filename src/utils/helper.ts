@@ -56,10 +56,11 @@ export function findOrCreateRoleAssignment(
 }
 
 export function findOrCreateRole(nft: Nft, roleHash: Bytes): Role {
-  let role = Role.load(generateRoleId(nft, roleHash))
+  const roleId = generateRoleId(nft, roleHash)
+  let role = Role.load(roleId)
 
   if (!role) {
-    role = new Role(generateRoleId(nft, roleHash))
+    role = new Role(roleId)
     role.roleHash = roleHash
     role.nft = nft.id
     role.save()
