@@ -44,6 +44,7 @@ export function createMockRoleAssignment(
   newRoleAssignment.revocable = true
   newRoleAssignment.data = Bytes.fromUTF8('data')
   newRoleAssignment.createdAt = BigInt.fromI32(123)
+  newRoleAssignment.updatedAt = BigInt.fromI32(123)
   newRoleAssignment.save()
   return newRoleAssignment
 }

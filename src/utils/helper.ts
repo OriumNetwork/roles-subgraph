@@ -44,12 +44,13 @@ export function findOrCreateRoleAssignment(
     roleAssignment.nft = nft.id
     roleAssignment.grantor = grantor.id
     roleAssignment.grantee = grantee.id
+    roleAssignment.createdAt = event.block.timestamp
   }
 
   roleAssignment.expirationDate = event.params._expirationDate
   roleAssignment.revocable = event.params._revocable
   roleAssignment.data = event.params._data
-  roleAssignment.createdAt = event.block.timestamp
+  roleAssignment.updatedAt = event.block.timestamp
   roleAssignment.save()
   return roleAssignment
 }

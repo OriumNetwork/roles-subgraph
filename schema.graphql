@@ -24,6 +24,7 @@ type RoleAssignment @entity {
   revocable: Boolean!
   data: Bytes!
   createdAt: BigInt!
+  updatedAt: BigInt!
 }
 
 type Role @entity {
