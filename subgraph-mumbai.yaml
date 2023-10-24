@@ -2,13 +2,11 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
-  # There is no "(Chronos) Traveler" on Mumbai
 
   - name: ERC7432-Immutable-Roles
     kind: ethereum
     network: mumbai
     source:
-      address: '0xb2ad616e84e1ef7a9ed0fa3169aaf31ee51ea824'
       abi: ERC7432
       startBlock: 40877849
     mapping:
