@@ -27,16 +27,24 @@ export function createMockRoleAssignment(
   grantee: string,
   nft: Nft,
   expirationDate: BigInt,
+  rolesRegistryAddress: string,
 ): RoleAssignment {
-  const roleId = generateRoleId(nft, roleHash)
+  const roleId = generateRoleId(rolesRegistryAddress, nft, roleHash)
   const role = new Role(roleId)
   role.roleHash = roleHash
   role.nft = nft.id
+  role.rolesRegistry = rolesRegistryAddress
   role.save()
 
-  const roleAssignmentId = generateRoleAssignmentId(new Account(grantor), new Account(grantee), nft, roleHash)
+  const roleAssignmentId = generateRoleAssignmentId(
+    rolesRegistryAddress,
+    new Account(grantor),
+    new Account(grantee),
+    nft,
+    roleHash,
+  )
   const newRoleAssignment = new RoleAssignment(roleAssignmentId)
-  newRoleAssignment.role = `${nft.id}-${roleHash.toHex()}`
+  newRoleAssignment.role = role.id
   newRoleAssignment.nft = nft.id
   newRoleAssignment.grantor = grantor
   newRoleAssignment.grantee = grantee
@@ -45,16 +53,28 @@ export function createMockRoleAssignment(
   newRoleAssignment.data = Bytes.fromUTF8('data')
   newRoleAssignment.createdAt = BigInt.fromI32(123)
   newRoleAssignment.updatedAt = BigInt.fromI32(123)
+  newRoleAssignment.rolesRegistry = rolesRegistryAddress
   newRoleAssignment.save()
   return newRoleAssignment
 }
 
-export function createMockRoleApproval(grantor: string, operator: string, tokenAddress: string): RoleApproval {
-  const roleApprovalId = generateRoleApprovalId(new Account(grantor), new Account(operator), tokenAddress)
+export function createMockRoleApproval(
+  grantor: string,
+  operator: string,
+  tokenAddress: string,
+  rolesRegistryAddress: string,
+): RoleApproval {
+  const roleApprovalId = generateRoleApprovalId(
+    rolesRegistryAddress,
+    new Account(grantor),
+    new Account(operator),
+    tokenAddress,
+  )
   const roleApproval = new RoleApproval(roleApprovalId)
   roleApproval.grantor = grantor
   roleApproval.operator = operator
   roleApproval.tokenAddress = tokenAddress
+  roleApproval.rolesRegistry = rolesRegistryAddress
   roleApproval.save()
   return roleApproval
 }
@@ -66,22 +86,34 @@ export function validateRole(
   roleAssignment: Bytes,
   expirationDate: BigInt,
   data: Bytes,
+  rolesRegistryAddress: string,
 ): void {
-  const roleId = generateRoleId(nft, roleAssignment)
+  const roleId = generateRoleId(rolesRegistryAddress, nft, roleAssignment)
   assert.fieldEquals('Role', roleId, 'roleHash', roleAssignment.toHex())
   assert.fieldEquals('Role', roleId, 'nft', nft.id)
 
-  const roleAssignemntId = generateRoleAssignmentId(grantor, grantee, nft, roleAssignment)
-  assert.fieldEquals('RoleAssignment', roleAssignemntId, 'role', `${nft.id}-${roleAssignment.toHex()}`)
-  assert.fieldEquals('RoleAssignment', roleAssignemntId, 'nft', nft.id)
-  assert.fieldEquals('RoleAssignment', roleAssignemntId, 'grantor', grantor.id)
-  assert.fieldEquals('RoleAssignment', roleAssignemntId, 'grantee', grantee.id)
-  assert.fieldEquals('RoleAssignment', roleAssignemntId, 'expirationDate', expirationDate.toString())
-  assert.fieldEquals('RoleAssignment', roleAssignemntId, 'data', data.toHex())
+  const roleAssignmentId = generateRoleAssignmentId(rolesRegistryAddress, grantor, grantee, nft, roleAssignment)
+  assert.fieldEquals(
+    'RoleAssignment',
+    roleAssignmentId,
+    'role',
+    `${rolesRegistryAddress}-${nft.id}-${roleAssignment.toHex()}`,
+  )
+  assert.fieldEquals('RoleAssignment', roleAssignmentId, 'nft', nft.id)
+  assert.fieldEquals('RoleAssignment', roleAssignmentId, 'grantor', grantor.id)
+  assert.fieldEquals('RoleAssignment', roleAssignmentId, 'grantee', grantee.id)
+  assert.fieldEquals('RoleAssignment', roleAssignmentId, 'expirationDate', expirationDate.toString())
+  assert.fieldEquals('RoleAssignment', roleAssignmentId, 'data', data.toHex())
 }
 
-export function validateRoleApproval(grantor: string, operator: string, tokenAddress: string): void {
+export function validateRoleApproval(
+  rolesRegistryAddress: string,
+  grantor: string,
+  operator: string,
+  tokenAddress: string,
+): void {
   const roleApprovalId = generateRoleApprovalId(
+    rolesRegistryAddress,
     new Account(grantor.toLowerCase()),
     new Account(operator.toLowerCase()),
     tokenAddress,
