@@ -17,7 +17,6 @@ type Account @entity {
 type RoleAssignment @entity {
   id: ID! # rolesRegistryAddress + grantorAddress + tokenId + tokenAddress + granteeAddress + roleHash
   role: Role!
-  rolesRegistry: RolesRegistry!
   nft: Nft!
   grantor: Account!
   grantee: Account!

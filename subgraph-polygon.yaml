@@ -29,7 +29,6 @@ dataSources:
     network: matic
     source:
       abi: ERC7432
-      startBlock: 48672001
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
