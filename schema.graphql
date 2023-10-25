@@ -46,6 +46,5 @@ type RoleApproval @entity {
 type RolesRegistry @entity {
   id: ID! # contractAddress
   roles: [Role!] @derivedFrom(field: "rolesRegistry")
-  roleAssignments: [RoleAssignment!] @derivedFrom(field: "rolesRegistry")
   roleApprovals: [RoleApproval!] @derivedFrom(field: "rolesRegistry")
 }
