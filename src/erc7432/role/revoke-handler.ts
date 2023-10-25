@@ -28,7 +28,7 @@ export function handleRoleRevoked(event: RoleRevoked): void {
     return
   }
 
-  const roleAssignmentId = generateRoleAssignmentId(revoker, grantee, nft, event.params._role)
+  const roleAssignmentId = generateRoleAssignmentId(event.address.toHex(), revoker, grantee, nft, event.params._role)
   const roleAssignment = RoleAssignment.load(roleAssignmentId)
   if (!roleAssignment) {
     log.warning('[handleRoleRevoked] RoleAssignment {} does not exist, skipping...', [roleAssignmentId])

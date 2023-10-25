@@ -1,7 +1,7 @@
 import { assert, describe, test, clearStore, afterEach } from 'matchstick-as'
 import { createNewRoleGrantedEvent } from '../helpers/events'
 import { handleRoleGranted } from '../../src/erc7432'
-import { Addresses } from '../helpers/contants'
+import { Addresses, ZERO_ADDRESS } from '../helpers/contants'
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import { createMockAccount, createMockNft, validateRole } from '../helpers/entities'
 import { Account } from '../../generated/schema'
@@ -14,6 +14,7 @@ const grantor = Addresses[2]
 const revocable = true
 const data = Bytes.fromUTF8('0x1234567890')
 const expirationDate = BigInt.fromI32(99999)
+const rolesRegistry = ZERO_ADDRESS
 
 describe('ERC-7432 RoleGranted Handler', () => {
   afterEach(() => {
@@ -133,9 +134,33 @@ describe('ERC-7432 RoleGranted Handler', () => {
     assert.entityCount('Account', 3)
 
     const grantorAccount = new Account(grantor)
-    validateRole(grantorAccount, new Account(Addresses[0]), nft, RoleAssignmentId, expirationDate, data)
-    validateRole(grantorAccount, new Account(Addresses[1]), nft, RoleAssignmentId, expirationDate, data)
-    validateRole(grantorAccount, new Account(Addresses[2]), nft, RoleAssignmentId, expirationDate, data)
+    validateRole(
+      grantorAccount,
+      new Account(Addresses[0]),
+      nft,
+      RoleAssignmentId,
+      expirationDate,
+      data,
+      event1.address.toHex(),
+    )
+    validateRole(
+      grantorAccount,
+      new Account(Addresses[1]),
+      nft,
+      RoleAssignmentId,
+      expirationDate,
+      data,
+      event2.address.toHex(),
+    )
+    validateRole(
+      grantorAccount,
+      new Account(Addresses[2]),
+      nft,
+      RoleAssignmentId,
+      expirationDate,
+      data,
+      event3.address.toHex(),
+    )
   })
 
   test('should grant multiple roles for different NFTs', () => {
@@ -189,8 +214,8 @@ describe('ERC-7432 RoleGranted Handler', () => {
     assert.entityCount('Account', 3)
 
     const grantorAccount = new Account(grantor)
-    validateRole(grantorAccount, new Account(Addresses[0]), nft1, RoleAssignmentId, expirationDate, data)
-    validateRole(grantorAccount, new Account(Addresses[1]), nft2, RoleAssignmentId, expirationDate, data)
-    validateRole(grantorAccount, new Account(Addresses[2]), nft3, RoleAssignmentId, expirationDate, data)
+    validateRole(grantorAccount, new Account(Addresses[0]), nft1, RoleAssignmentId, expirationDate, data, rolesRegistry)
+    validateRole(grantorAccount, new Account(Addresses[1]), nft2, RoleAssignmentId, expirationDate, data, rolesRegistry)
+    validateRole(grantorAccount, new Account(Addresses[2]), nft3, RoleAssignmentId, expirationDate, data, rolesRegistry)
   })
 })

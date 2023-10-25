@@ -8,6 +8,7 @@ import {
 import { log } from '@graphprotocol/graph-ts'
 
 export function handleRoleApprovalForAll(event: RoleApprovalForAll): void {
+  const rolesRegistryAddress = event.address.toHex()
   const grantorAddress = event.transaction.from.toHex()
   const operatorAddress = event.params._operator.toHex()
   const tokenAddress = event.params._tokenAddress.toHex()
@@ -17,13 +18,18 @@ export function handleRoleApprovalForAll(event: RoleApprovalForAll): void {
   const operatorAccount = findOrCreateAccount(operatorAddress)
 
   if (isApproved) {
-    const roleApproval = insertRoleApprovalIfNotExist(grantorAccount, operatorAccount, tokenAddress)
+    const roleApproval = insertRoleApprovalIfNotExist(
+      rolesRegistryAddress,
+      grantorAccount,
+      operatorAccount,
+      tokenAddress,
+    )
     log.warning('[handleRoleApprovalForAll] Updated RoleAssignment Approval: {} Tx: {}', [
       roleApproval.id,
       event.transaction.hash.toHex(),
     ])
   } else {
-    const roleApprovalId = generateRoleApprovalId(grantorAccount, operatorAccount, tokenAddress)
+    const roleApprovalId = generateRoleApprovalId(rolesRegistryAddress, grantorAccount, operatorAccount, tokenAddress)
     deleteRoleApprovalIfExist(roleApprovalId)
     log.warning('[handleRoleApprovalForAll] Removed RoleAssignment Approval: {} Tx: {}', [
       roleApprovalId,

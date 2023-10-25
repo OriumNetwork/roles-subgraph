@@ -3,6 +3,7 @@ import { Transfer } from '../../generated/ERC721-Chronos-Traveler/ERC721'
 import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { RoleGranted, RoleRevoked, RoleApprovalForAll } from '../../generated/ERC7432-Immutable-Roles/ERC7432'
 import { Nft } from '../../generated/schema'
+import { ZERO_ADDRESS } from './contants'
 
 export function createTransferEvent(from: string, to: string, tokenId: string, address: string): Transfer {
   const event = changetype<Transfer>(newMockEvent())
@@ -21,6 +22,7 @@ export function createNewRoleRevokedEvent(
   grantee: string,
 ): RoleRevoked {
   const event = changetype<RoleRevoked>(newMockEvent())
+  event.address = Address.fromString(ZERO_ADDRESS)
   event.parameters = new Array<ethereum.EventParam>()
   event.parameters.push(buildEventParamBytes('_role', roleAssignment))
   event.parameters.push(buildEventParamAddress('_tokenAddress', nft.tokenAddress))
@@ -41,6 +43,7 @@ export function createNewRoleGrantedEvent(
   data: Bytes,
 ): RoleGranted {
   const event = changetype<RoleGranted>(newMockEvent())
+  event.address = Address.fromString(ZERO_ADDRESS)
   event.parameters = new Array<ethereum.EventParam>()
   event.parameters.push(buildEventParamBytes('_role', roleAssignment))
   event.parameters.push(buildEventParamAddress('_tokenAddress', tokenAddress))
@@ -60,6 +63,7 @@ export function createNewRoleApprovalForAllEvent(
   isApproved: boolean,
 ): RoleApprovalForAll {
   const event = changetype<RoleApprovalForAll>(newMockEvent())
+  event.address = Address.fromString(ZERO_ADDRESS)
   event.parameters = new Array<ethereum.EventParam>()
   event.transaction.from = Address.fromString(grantor)
   event.parameters.push(buildEventParamAddress('_tokenAddress', tokenAddress))

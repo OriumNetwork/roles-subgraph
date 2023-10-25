@@ -15,7 +15,7 @@ type Account @entity {
 }
 
 type RoleAssignment @entity {
-  id: ID! # grantorAddress + tokenId + tokenAddress + granteeAddress + roleHash
+  id: ID! # rolesRegistryAddress + grantorAddress + tokenId + tokenAddress + granteeAddress + roleHash
   role: Role!
   nft: Nft!
   grantor: Account!
@@ -28,15 +28,23 @@ type RoleAssignment @entity {
 }
 
 type Role @entity {
-  id: ID! # tokenId + tokenAddress + roleHash
+  id: ID! # rolesRegistryAddress + tokenId + tokenAddress + roleHash
+  rolesRegistry: RolesRegistry!
   roleHash: Bytes!
   nft: Nft!
   roleAssignments: [RoleAssignment!] @derivedFrom(field: "role")
 }
 
 type RoleApproval @entity {
-  id: ID! # grantorAddress + operatorAddress + tokenAddress
+  id: ID! # rolesRegistryAddress + grantorAddress + operatorAddress + tokenAddress
+  rolesRegistry: RolesRegistry!
   grantor: Account!
   operator: Account!
   tokenAddress: String!
+}
+
+type RolesRegistry @entity {
+  id: ID! # contractAddress
+  roles: [Role!] @derivedFrom(field: "rolesRegistry")
+  roleApprovals: [RoleApproval!] @derivedFrom(field: "rolesRegistry")
 }

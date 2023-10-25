@@ -28,9 +28,7 @@ dataSources:
     kind: ethereum
     network: goerli
     source:
-      address: '0xb2ad616e84e1ef7a9ed0fa3169aaf31ee51ea824'
       abi: ERC7432
-      startBlock: 9815688
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
