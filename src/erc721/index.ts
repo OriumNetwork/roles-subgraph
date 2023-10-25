@@ -1,5 +1,5 @@
 import { Nft } from '../../generated/schema'
-import { Transfer } from '../../generated/ERC721-Chronos-Traveler/ERC721'
+import { Transfer } from '../../generated/ERC721/ERC721'
 import { generateNftId, createNft, findOrCreateAccount } from '../utils/helper'
 
 export function handleTransfer(event: Transfer): void {
