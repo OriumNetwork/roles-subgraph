@@ -1,5 +1,5 @@
 import { newMockEvent } from 'matchstick-as'
-import { Transfer } from '../../generated/ERC721-Chronos-Traveler/ERC721'
+import { Transfer } from '../../generated/ERC721/ERC721'
 import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { RoleGranted, RoleRevoked, RoleApprovalForAll } from '../../generated/ERC7432-Immutable-Roles/ERC7432'
 import { Nft } from '../../generated/schema'
