@@ -14,7 +14,7 @@ const grantor = Addresses[2]
 const revocable = true
 const data = Bytes.fromUTF8('0x1234567890')
 const expirationDate = BigInt.fromI32(99999)
-const rolesRegistryAddress = ZERO_ADDRESS
+const rolesRegistry = ZERO_ADDRESS
 
 describe('ERC-7432 RoleGranted Handler', () => {
   afterEach(() => {
@@ -214,32 +214,8 @@ describe('ERC-7432 RoleGranted Handler', () => {
     assert.entityCount('Account', 3)
 
     const grantorAccount = new Account(grantor)
-    validateRole(
-      grantorAccount,
-      new Account(Addresses[0]),
-      nft1,
-      RoleAssignmentId,
-      expirationDate,
-      data,
-      rolesRegistryAddress,
-    )
-    validateRole(
-      grantorAccount,
-      new Account(Addresses[1]),
-      nft2,
-      RoleAssignmentId,
-      expirationDate,
-      data,
-      rolesRegistryAddress,
-    )
-    validateRole(
-      grantorAccount,
-      new Account(Addresses[2]),
-      nft3,
-      RoleAssignmentId,
-      expirationDate,
-      data,
-      rolesRegistryAddress,
-    )
+    validateRole(grantorAccount, new Account(Addresses[0]), nft1, RoleAssignmentId, expirationDate, data, rolesRegistry)
+    validateRole(grantorAccount, new Account(Addresses[1]), nft2, RoleAssignmentId, expirationDate, data, rolesRegistry)
+    validateRole(grantorAccount, new Account(Addresses[2]), nft3, RoleAssignmentId, expirationDate, data, rolesRegistry)
   })
 })
