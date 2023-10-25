@@ -53,7 +53,6 @@ export function createMockRoleAssignment(
   newRoleAssignment.data = Bytes.fromUTF8('data')
   newRoleAssignment.createdAt = BigInt.fromI32(123)
   newRoleAssignment.updatedAt = BigInt.fromI32(123)
-  newRoleAssignment.rolesRegistry = rolesRegistryAddress
   newRoleAssignment.save()
   return newRoleAssignment
 }

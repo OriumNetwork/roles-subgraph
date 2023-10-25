@@ -47,7 +47,6 @@ export function findOrCreateRoleAssignment(
   if (!roleAssignment) {
     roleAssignment = new RoleAssignment(roleAssignmentId)
     roleAssignment.role = findOrCreateRole(event.address.toHex(), nft, event.params._role).id
-    roleAssignment.rolesRegistry = findOrCreateRolesRegistry(event.address.toHex()).id
     roleAssignment.nft = nft.id
     roleAssignment.grantor = grantor.id
     roleAssignment.grantee = grantee.id
