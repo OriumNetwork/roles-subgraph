@@ -2,13 +2,11 @@ specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
-  - name: ERC721-Chronos-Traveler
+  - name: ERC721
     kind: ethereum
     network: matic
     source:
-      address: '0xa03C4E40d1fCaa826591007a17Ca929ef8AdBF1C'
       abi: ERC721
-      startBlock: 36796276
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
