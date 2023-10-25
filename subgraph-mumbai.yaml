@@ -4,7 +4,7 @@ schema:
 dataSources:
   - name: ERC721
     kind: ethereum
-    network: matic
+    network: mumbai
     source:
       abi: ERC721
     mapping:
