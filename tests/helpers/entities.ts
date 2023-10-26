@@ -1,12 +1,20 @@
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import { Account, Nft, RoleAssignment, RoleApproval, Role } from '../../generated/schema'
-import { generateNftId, generateRoleAssignmentId, generateRoleApprovalId, generateRoleId } from '../../src/utils/helper'
+import {
+  generateERC721NftId,
+  generateRoleAssignmentId,
+  generateRoleApprovalId,
+  generateRoleId,
+  findOrCreateRolesRegistry,
+  NftType,
+} from '../../utils'
 import { assert } from 'matchstick-as'
 
 export function createMockNft(tokenAddress: string, tokenId: string, ownerAddress: string): Nft {
-  const nft = new Nft(generateNftId(tokenAddress, tokenId))
+  const nft = new Nft(generateERC721NftId(tokenAddress, BigInt.fromString(tokenId)))
   nft.tokenAddress = tokenAddress
   nft.tokenId = BigInt.fromString(tokenId)
+  nft.type = NftType.ERC721.toString()
 
   const nftOwner = createMockAccount(ownerAddress)
 
@@ -29,7 +37,8 @@ export function createMockRoleAssignment(
   expirationDate: BigInt,
   rolesRegistryAddress: string,
 ): RoleAssignment {
-  const roleId = generateRoleId(rolesRegistryAddress, nft, roleHash)
+  const rolesRegistry = findOrCreateRolesRegistry(rolesRegistryAddress)
+  const roleId = generateRoleId(rolesRegistry, nft, roleHash)
   const role = new Role(roleId)
   role.roleHash = roleHash
   role.nft = nft.id
@@ -37,7 +46,7 @@ export function createMockRoleAssignment(
   role.save()
 
   const roleAssignmentId = generateRoleAssignmentId(
-    rolesRegistryAddress,
+    rolesRegistry,
     new Account(grantor),
     new Account(grantee),
     nft,
@@ -63,8 +72,9 @@ export function createMockRoleApproval(
   tokenAddress: string,
   rolesRegistryAddress: string,
 ): RoleApproval {
+  const rolesRegistry = findOrCreateRolesRegistry(rolesRegistryAddress)
   const roleApprovalId = generateRoleApprovalId(
-    rolesRegistryAddress,
+    rolesRegistry,
     new Account(grantor),
     new Account(operator),
     tokenAddress,
@@ -87,11 +97,12 @@ export function validateRole(
   data: Bytes,
   rolesRegistryAddress: string,
 ): void {
-  const roleId = generateRoleId(rolesRegistryAddress, nft, roleAssignment)
+  const rolesRegistry = findOrCreateRolesRegistry(rolesRegistryAddress)
+  const roleId = generateRoleId(rolesRegistry, nft, roleAssignment)
   assert.fieldEquals('Role', roleId, 'roleHash', roleAssignment.toHex())
   assert.fieldEquals('Role', roleId, 'nft', nft.id)
 
-  const roleAssignmentId = generateRoleAssignmentId(rolesRegistryAddress, grantor, grantee, nft, roleAssignment)
+  const roleAssignmentId = generateRoleAssignmentId(rolesRegistry, grantor, grantee, nft, roleAssignment)
   assert.fieldEquals(
     'RoleAssignment',
     roleAssignmentId,
@@ -111,8 +122,9 @@ export function validateRoleApproval(
   operator: string,
   tokenAddress: string,
 ): void {
+  const rolesRegistry = findOrCreateRolesRegistry(rolesRegistryAddress)
   const roleApprovalId = generateRoleApprovalId(
-    rolesRegistryAddress,
+    rolesRegistry,
     new Account(grantor.toLowerCase()),
     new Account(operator.toLowerCase()),
     tokenAddress,
