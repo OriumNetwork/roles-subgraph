@@ -1,8 +1,15 @@
+enum NftType {
+  ERC721
+  ERC1155
+}
+
 type Nft @entity {
   id: ID! # tokenId + tokenAddress
   tokenAddress: String!
   tokenId: BigInt!
   owner: Account!
+  type: NftType!
+  amount: BigInt
   roles: [Role!] @derivedFrom(field: "nft")
 }
 

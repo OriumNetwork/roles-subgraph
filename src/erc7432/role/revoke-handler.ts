@@ -1,13 +1,13 @@
 import { log } from '@graphprotocol/graph-ts'
-import { RoleRevoked } from '../../../generated/ERC7432-Immutable-Roles/ERC7432'
+import { RoleRevoked } from '../../../generated/ERC7432/ERC7432'
 import { Account, Nft, RoleAssignment } from '../../../generated/schema'
-import { generateNftId, generateRoleAssignmentId } from '../../utils/helper'
+import { findOrCreateRolesRegistry, generateERC721NftId, generateRoleAssignmentId } from '../../../utils'
 
 export function handleRoleRevoked(event: RoleRevoked): void {
-  const tokenId = event.params._tokenId.toString()
+  const tokenId = event.params._tokenId
   const tokenAddress = event.params._tokenAddress.toHexString()
 
-  const nftId = generateNftId(tokenAddress, tokenId)
+  const nftId = generateERC721NftId(tokenAddress, tokenId)
   const nft = Nft.load(nftId)
   if (!nft) {
     log.warning('[handleRoleRevoked] NFT {} does not exist, skipping...', [nftId])
@@ -27,8 +27,8 @@ export function handleRoleRevoked(event: RoleRevoked): void {
     log.warning('[handleRoleGranted] grantee {} does not exist, skipping...', [granteeAddress])
     return
   }
-
-  const roleAssignmentId = generateRoleAssignmentId(event.address.toHex(), revoker, grantee, nft, event.params._role)
+  const rolesRegistry = findOrCreateRolesRegistry(event.address.toHex())
+  const roleAssignmentId = generateRoleAssignmentId(rolesRegistry, revoker, grantee, nft, event.params._role)
   const roleAssignment = RoleAssignment.load(roleAssignmentId)
   if (!roleAssignment) {
     log.warning('[handleRoleRevoked] RoleAssignment {} does not exist, skipping...', [roleAssignmentId])

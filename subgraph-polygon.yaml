@@ -22,7 +22,7 @@ dataSources:
           handler: handleTransfer
       file: ./src/erc721/index.ts
 
-  - name: ERC7432-Immutable-Roles
+  - name: ERC7432
     kind: ethereum
     network: matic
     source:
@@ -47,3 +47,25 @@ dataSources:
         - event: RoleApprovalForAll(indexed address,indexed address,bool)
           handler: handleRoleApprovalForAll
       file: ./src/erc7432/index.ts
+
+  - name: ERC1155
+    kind: ethereum
+    network: matic
+    source:
+      abi: ERC1155
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Nft
+        - Account
+      abis:
+        - name: ERC1155
+          file: ./abis/ERC1155.json
+      eventHandlers:
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+      file: ./src/erc1155/index.ts
