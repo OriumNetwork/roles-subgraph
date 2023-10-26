@@ -1,30 +1,10 @@
-import { NftType } from '..'
-import { Account, Nft } from '../../generated/schema'
-import { findOrCreateAccount } from './account'
+import { NftType } from '../../enums'
+import { Account, Nft } from '../../../generated/schema'
+import { findOrCreateAccount } from '../account'
 import { Address, BigInt, store } from '@graphprotocol/graph-ts'
-
-export function generateERC721NftId(tokenAddress: string, tokenId: BigInt): string {
-  return tokenAddress + '-' + tokenId.toString()
-}
 
 export function generateERC1155NftId(tokenAddress: string, tokenId: BigInt, ownerAddress: string): string {
   return tokenAddress + '-' + tokenId.toString() + '-' + ownerAddress
-}
-export function upsertERC721Nft(tokenAddress: string, tokenId: BigInt, to: string): Nft {
-  const nftId = generateERC721NftId(tokenAddress, tokenId)
-
-  let nft = Nft.load(nftId)
-  if (!nft) {
-    nft = new Nft(nftId)
-    nft.tokenId = tokenId
-    nft.tokenAddress = tokenAddress
-    nft.type = NftType.ERC721.toString()
-  }
-
-  nft.owner = findOrCreateAccount(to).id
-  nft.save()
-
-  return nft
 }
 
 export function upsertERC1155Nft(tokenAddress: string, tokenId: BigInt, amount: BigInt, from: string, to: string): Nft {
