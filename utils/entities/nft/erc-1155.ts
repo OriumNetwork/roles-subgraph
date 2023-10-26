@@ -40,8 +40,6 @@ export function findOrCreateERC1155Nft(tokenAddress: string, tokenId: BigInt, to
   return nft
 }
 
-// remove balance from from account if it exists
-// add balance to to account if it exists
 export function updateERC1155Balance(from: Account, to: Account, toNft: Nft, amount: BigInt): void {
   if (from.id == to.id) return // should never happen
 
