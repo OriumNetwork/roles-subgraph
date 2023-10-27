@@ -17,8 +17,6 @@ describe('ERC-1155 Transfer Batch Handler', () => {
       const event = createTransferBatchEvent(Addresses[0], Addresses[0], Addresses[1], TokenIds, Amounts, ZERO_ADDRESS)
       handleTransferBatch(event)
 
-      // assert.entityCount('Nft', 1)
-      // assert.entityCount('Account', 1)
       for (let i = 0; i < event.params.ids.length; i++) {
         const tokenId = event.params.ids[i]
         const _id = generateERC1155NftId(event.address.toHexString(), tokenId, event.params.to.toHexString())

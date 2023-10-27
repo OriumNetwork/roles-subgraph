@@ -23,9 +23,6 @@ describe('ERC-1155 Transfer Single Handler', () => {
       )
       handleTransferSingle(event)
 
-      // assert.entityCount('Nft', 1)
-      // assert.entityCount('Account', 1)
-
       const _id = generateERC1155NftId(event.address.toHexString(), event.params.id, event.params.to.toHexString())
       assert.fieldEquals('Nft', _id, 'tokenAddress', ZERO_ADDRESS)
       assert.fieldEquals('Nft', _id, 'tokenId', TokenIds[0].toString())
