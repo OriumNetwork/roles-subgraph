@@ -4,6 +4,7 @@ import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
 import { RoleGranted, RoleRevoked, RoleApprovalForAll } from '../../generated/ERC7432/ERC7432'
 import { Nft } from '../../generated/schema'
 import { ZERO_ADDRESS } from './contants'
+import { TransferBatch, TransferSingle } from '../../generated/ERC1155/ERC1155'
 
 export function createTransferEvent(from: string, to: string, tokenId: string, address: string): Transfer {
   const event = changetype<Transfer>(newMockEvent())
@@ -11,6 +12,44 @@ export function createTransferEvent(from: string, to: string, tokenId: string, a
   event.parameters.push(buildEventParamAddress('from', from))
   event.parameters.push(buildEventParamAddress('to', to))
   event.parameters.push(buildEventParamUint('tokenId', BigInt.fromString(tokenId)))
+  event.address = Address.fromString(address)
+  return event
+}
+
+export function createTransferSingleEvent(
+  operator: string,
+  from: string,
+  to: string,
+  tokenId: BigInt,
+  amount: BigInt,
+  address: string,
+): TransferSingle {
+  const event = changetype<TransferSingle>(newMockEvent())
+  event.parameters = new Array<ethereum.EventParam>()
+  event.parameters.push(buildEventParamAddress('operator', operator))
+  event.parameters.push(buildEventParamAddress('from', from))
+  event.parameters.push(buildEventParamAddress('to', to))
+  event.parameters.push(buildEventParamUint('id', tokenId))
+  event.parameters.push(buildEventParamUint('value', amount))
+  event.address = Address.fromString(address)
+  return event
+}
+
+export function createTransferBatchEvent(
+  operator: string,
+  from: string,
+  to: string,
+  tokenIds: Array<BigInt>,
+  amounts: Array<BigInt>,
+  address: string,
+): TransferBatch {
+  const event = changetype<TransferBatch>(newMockEvent())
+  event.parameters = new Array<ethereum.EventParam>()
+  event.parameters.push(buildEventParamAddress('operator', operator))
+  event.parameters.push(buildEventParamAddress('from', from))
+  event.parameters.push(buildEventParamAddress('to', to))
+  event.parameters.push(buildEventParamUintArray('ids', tokenIds))
+  event.parameters.push(buildEventParamUintArray('values', amounts))
   event.address = Address.fromString(address)
   return event
 }
@@ -84,6 +123,11 @@ function buildEventParamAddress(name: string, address: string): ethereum.EventPa
 
 function buildEventParamUint(name: string, value: BigInt): ethereum.EventParam {
   const ethValue = ethereum.Value.fromUnsignedBigInt(value)
+  return new ethereum.EventParam(name, ethValue)
+}
+
+function buildEventParamUintArray(name: string, value: Array<BigInt>): ethereum.EventParam {
+  const ethValue = ethereum.Value.fromUnsignedBigIntArray(value)
   return new ethereum.EventParam(name, ethValue)
 }
 
