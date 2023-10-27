@@ -19,9 +19,7 @@ export function upsertERC1155Nft(tokenAddress: string, tokenId: BigInt, amount: 
     nft.type = NftType.ERC1155.toString()
   }
 
-  updateERC1155Balance(findOrCreateAccount(from), findOrCreateAccount(to), nft, amount)
-
-  return nft
+  return updateERC1155Balance(findOrCreateAccount(from), findOrCreateAccount(to), nft, amount)
 }
 
 export function findOrCreateERC1155Nft(tokenAddress: string, tokenId: BigInt, to: Account): Nft {
@@ -40,7 +38,7 @@ export function findOrCreateERC1155Nft(tokenAddress: string, tokenId: BigInt, to
   return nft
 }
 
-export function updateERC1155Balance(from: Account, to: Account, toNft: Nft, amount: BigInt): void {
+export function updateERC1155Balance(from: Account, to: Account, toNft: Nft, amount: BigInt): Nft {
   if (from.id != Address.zero().toHex()) {
     const fromNft = findOrCreateERC1155Nft(toNft.tokenAddress, toNft.tokenId, from)
 
@@ -59,4 +57,6 @@ export function updateERC1155Balance(from: Account, to: Account, toNft: Nft, amo
     else toNft.amount = toNft.amount!.plus(amount)
     toNft.save()
   }
+
+  return toNft
 }
