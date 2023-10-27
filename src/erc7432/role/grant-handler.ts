@@ -1,13 +1,13 @@
 import { log } from '@graphprotocol/graph-ts'
-import { RoleGranted } from '../../../generated/ERC7432-Immutable-Roles/ERC7432'
+import { RoleGranted } from '../../../generated/ERC7432/ERC7432'
 import { Account, Nft } from '../../../generated/schema'
-import { generateNftId, findOrCreateAccount, findOrCreateRoleAssignment } from '../../utils/helper'
+import { generateERC721NftId, findOrCreateAccount, findOrCreateRoleAssignment } from '../../../utils'
 
 export function handleRoleGranted(event: RoleGranted): void {
-  const tokenId = event.params._tokenId.toString()
+  const tokenId = event.params._tokenId
   const tokenAddress = event.params._tokenAddress.toHex()
 
-  const nftId = generateNftId(tokenAddress, tokenId)
+  const nftId = generateERC721NftId(tokenAddress, tokenId)
   const nft = Nft.load(nftId)
   if (!nft) {
     log.warning('[handleRoleGranted] NFT {} does not exist, skipping...', [nftId])

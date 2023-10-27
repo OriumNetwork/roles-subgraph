@@ -4,7 +4,7 @@ import { handleRoleRevoked } from '../../src/erc7432'
 import { Bytes, BigInt } from '@graphprotocol/graph-ts'
 import { createMockAccount, createMockNft, createMockRoleAssignment, validateRole } from '../helpers/entities'
 import { Addresses, ONE, TWO, ZERO_ADDRESS } from '../helpers/contants'
-import { generateNftId, generateRoleAssignmentId } from '../../src/utils/helper'
+import { findOrCreateRolesRegistry, generateERC721NftId, generateRoleAssignmentId } from '../../utils'
 import { Account, Nft } from '../../generated/schema'
 
 const tokenId = '123'
@@ -24,7 +24,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
   test('should not revoke roleAssignment when NFT does not exist', () => {
     assert.entityCount('RoleAssignment', 0)
 
-    const nftId = generateNftId(tokenAddress, tokenId)
+    const nftId = generateERC721NftId(tokenAddress, BigInt.fromString(tokenId))
     const nft = new Nft(nftId)
     nft.tokenAddress = tokenAddress
     nft.tokenId = BigInt.fromString(tokenId)
@@ -77,7 +77,8 @@ describe('ERC-7432 RoleRevoked Handler', () => {
     handleRoleRevoked(event)
 
     assert.entityCount('RoleAssignment', 1)
-    const _id = generateRoleAssignmentId(rolesRegistry, new Account(revoker), granteeAccount, nft, RoleAssignmentId)
+    const registry = findOrCreateRolesRegistry(rolesRegistry)
+    const _id = generateRoleAssignmentId(registry, new Account(revoker), granteeAccount, nft, RoleAssignmentId)
     assert.fieldEquals('RoleAssignment', _id, 'expirationDate', '0')
   })
 

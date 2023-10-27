@@ -1,10 +1,11 @@
-import { RoleApprovalForAll } from '../../../generated/ERC7432-Immutable-Roles/ERC7432'
+import { RoleApprovalForAll } from '../../../generated/ERC7432/ERC7432'
 import {
   findOrCreateAccount,
-  insertRoleApprovalIfNotExist,
-  deleteRoleApprovalIfExist,
+  findOrCreateRoleApproval,
+  deleteRoleApproval,
   generateRoleApprovalId,
-} from '../../utils/helper'
+  findOrCreateRolesRegistry,
+} from '../../../utils'
 import { log } from '@graphprotocol/graph-ts'
 
 export function handleRoleApprovalForAll(event: RoleApprovalForAll): void {
@@ -16,23 +17,18 @@ export function handleRoleApprovalForAll(event: RoleApprovalForAll): void {
 
   const grantorAccount = findOrCreateAccount(grantorAddress)
   const operatorAccount = findOrCreateAccount(operatorAddress)
+  const rolesRegistry = findOrCreateRolesRegistry(rolesRegistryAddress)
 
   if (isApproved) {
-    const roleApproval = insertRoleApprovalIfNotExist(
-      rolesRegistryAddress,
-      grantorAccount,
-      operatorAccount,
-      tokenAddress,
-    )
+    const roleApproval = findOrCreateRoleApproval(rolesRegistry, grantorAccount, operatorAccount, tokenAddress)
     log.warning('[handleRoleApprovalForAll] Updated RoleAssignment Approval: {} Tx: {}', [
       roleApproval.id,
       event.transaction.hash.toHex(),
     ])
   } else {
-    const roleApprovalId = generateRoleApprovalId(rolesRegistryAddress, grantorAccount, operatorAccount, tokenAddress)
-    deleteRoleApprovalIfExist(roleApprovalId)
+    deleteRoleApproval(rolesRegistry, grantorAccount, operatorAccount, tokenAddress)
     log.warning('[handleRoleApprovalForAll] Removed RoleAssignment Approval: {} Tx: {}', [
-      roleApprovalId,
+      generateRoleApprovalId(rolesRegistry, grantorAccount, operatorAccount, tokenAddress),
       event.transaction.hash.toHex(),
     ])
   }
