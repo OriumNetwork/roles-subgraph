@@ -41,14 +41,11 @@ export function findOrCreateERC1155Nft(tokenAddress: string, tokenId: BigInt, to
 }
 
 export function updateERC1155Balance(from: Account, to: Account, toNft: Nft, amount: BigInt): void {
-  if (from.id == to.id) return // should never happen
-
   if (from.id != Address.zero().toHex()) {
     const fromNft = findOrCreateERC1155Nft(toNft.tokenAddress, toNft.tokenId, from)
-    if (!fromNft.amount) return store.remove('Nft', fromNft.id) // should never happen
 
     // remove if the decudecting amount is 0
-    if (fromNft.amount!.minus(amount).equals(BigInt.fromI32(0))) {
+    if (!fromNft.amount || fromNft.amount!.minus(amount).equals(BigInt.fromI32(0))) {
       store.remove('Nft', fromNft.id)
     } else {
       fromNft.amount = fromNft.amount!.minus(amount)

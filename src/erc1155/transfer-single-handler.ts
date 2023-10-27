@@ -12,7 +12,7 @@ Example:
 export function handleTransferSingle(event: TransferSingle): void {
   const tokenAddress = event.address.toHex()
   const tokenId = event.params.id
-  const fromAddress = event.params.to.toHex()
+  const fromAddress = event.params.from.toHex()
   const toAddress = event.params.to.toHex()
   const amount = event.params.value
 

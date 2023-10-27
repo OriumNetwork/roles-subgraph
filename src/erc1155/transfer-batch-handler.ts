@@ -12,7 +12,7 @@ Example:
 export function handleTransferBatch(event: TransferBatch): void {
   const tokenAddress = event.address.toHex()
   const tokenIds = event.params.ids
-  const fromAddress = event.params.to.toHex()
+  const fromAddress = event.params.from.toHex()
   const toAddress = event.params.to.toHex()
   const amounts = event.params.values
 
