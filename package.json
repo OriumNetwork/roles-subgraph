@@ -9,9 +9,9 @@
   },
   "scripts": {
     "graph:auth": "graph auth --product hosted-service",
-    "build:goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "build:mumbai": "cp subgraph-mumbai.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "build:polygon": "cp subgraph-polygon.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:goerli": "mustache ./config/goerli.json subgraph.template.yaml > subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:mumbai": "mustache ./config/mumbai.json subgraph.template.yaml > subgraph.yamll && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:polygon": "mustache ./config/polygon.json subgraph.template.yaml > subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-goerli",
     "deploy:mumbai": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-mumbai",
     "deploy:polygon": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-polygon",
@@ -22,7 +22,8 @@
     "lint:staged": "npx lint-staged"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.55.0"
+    "@graphprotocol/graph-cli": "^0.55.0",
+    "mustache": "^4.2.0"
   },
   "devDependencies": {
     "@graphprotocol/graph-ts": "^0.31.0",
