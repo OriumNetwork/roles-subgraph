@@ -4,7 +4,12 @@ schema:
 dataSources:
 
 {{#erc721}}
+  {{#isFirstElement}}
+  - name: ERC721
+  {{/isFirstElement}} 
+  {{^isFirstElement}}
   - name: {{name}}
+  {{/isFirstElement}} 
     kind: ethereum
     network: {{network}}
     source:
@@ -28,7 +33,12 @@ dataSources:
 {{/erc721}}
 
 {{#erc1155}}
+  {{#isFirstElement}}
+  - name: ERC1155
+  {{/isFirstElement}} 
+  {{^isFirstElement}}
   - name: {{name}}
+  {{/isFirstElement}} 
     kind: ethereum
     network: {{network}}
     source:
@@ -70,6 +80,8 @@ dataSources:
       abis:
         - name: ERC7432
           file: ./abis/ERC7432.json
+        - name: ERC721
+          file: ./abis/ERC721.json
       eventHandlers:
         - event: RoleGranted(indexed bytes32,indexed address,indexed uint256,address,address,uint64,bool,bytes)
           handler: handleRoleGranted

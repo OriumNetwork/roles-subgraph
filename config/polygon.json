@@ -2,9 +2,10 @@
     "network": "matic",
     "erc721": [
         {
-            "name": "ERC721",
+            "name": "AavegotchiDiamond",
             "address": "0x86935f11c86623dec8a25696e1c19a8659cbf95d",
-            "startBlock": 11516320
+            "startBlock": 11516320,
+            "isFirstElement": true
         },
         {
             "name": "RealmDiamond",
@@ -19,9 +20,10 @@
     ],
     "erc1155": [
         {
-            "name": "ERC1155",
+            "name": "WearableDiamond",
             "address": "0x58de9aabcaeec0f69883c94318810ad79cc6a44f",
-            "startBlock": 35999793
+            "startBlock": 35999793,
+            "isFirstElement": true
         }
     ]
 }
