@@ -6,7 +6,7 @@ dataSources:
 {{#erc721}}
   - name: {{name}}
     kind: ethereum
-    network: matic
+    network: {{network}}
     source:
       abi: ERC721
       address: '{{address}}'
@@ -30,7 +30,7 @@ dataSources:
 {{#erc1155}}
   - name: {{name}}
     kind: ethereum
-    network: matic
+    network: {{network}}
     source:
       abi: ERC1155
       address: '{{address}}'
@@ -55,7 +55,7 @@ dataSources:
 
   - name: ERC7432
     kind: ethereum
-    network: matic
+    network: {{network}}
     source:
       abi: ERC7432
     mapping:

@@ -10,7 +10,7 @@
   "scripts": {
     "graph:auth": "graph auth --product hosted-service",
     "build:goerli": "mustache ./config/goerli.json subgraph.template.yaml > subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "build:mumbai": "mustache ./config/mumbai.json subgraph.template.yaml > subgraph.yamll && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:mumbai": "mustache ./config/mumbai.json subgraph.template.yaml > subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "build:polygon": "mustache ./config/polygon.json subgraph.template.yaml > subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-goerli",
     "deploy:mumbai": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-mumbai",
