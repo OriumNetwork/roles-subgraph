@@ -27,8 +27,6 @@ jobs:
         run: yarn graph:auth -- ${{ secrets.THEGRAPH_API_KEY }}
       - name: Build Goerli
         run: npm run build:goerli
-      - name: Test
-        run: npm run test
       - name: Deploy Goerli Hosted Service
         run: npm run deploy:goerli
       - name: Build Mumbai
@@ -37,6 +35,8 @@ jobs:
       #        run: npm run deploy:mumbai
       - name: Build Polygon
         run: npm run build:polygon
+      - name: Test
+        run: npm run test
       - name: Subgraph Deploy Polygon Satsuma
         run: npx graph deploy polygon-roles-registry --version-label ${{ github.sha }} --node https://subgraphs.alchemy.com/api/subgraphs/deploy --ipfs https://ipfs.satsuma.xyz --deploy-key ${{ secrets.SATSUMA_DEPLOY_KEY }}
       - name: Subgraph Promote Polygon Satsuma
