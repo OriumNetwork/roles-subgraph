@@ -9,9 +9,9 @@
   },
   "scripts": {
     "graph:auth": "graph auth --product hosted-service",
-    "build:goerli": "cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "build:mumbai": "cp subgraph-mumbai.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
-    "build:polygon": "cp subgraph-polygon.yaml subgraph.yaml && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:goerli": "node mustache.config.js goerli && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:mumbai": "node mustache.config.js mumbai && graph codegen subgraph.yaml && graph build subgraph.yaml",
+    "build:polygon": "node mustache.config.js polygon && graph codegen subgraph.yaml && graph build subgraph.yaml",
     "deploy:goerli": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-goerli",
     "deploy:mumbai": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-mumbai",
     "deploy:polygon": "graph deploy --node https://api.thegraph.com/deploy/orium-network/nft-roles-polygon",
@@ -31,6 +31,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "matchstick-as": "^0.5.2",
+    "mustache": "^4.2.0",
     "prettier": "^3.0.2"
   },
   "husky": {
