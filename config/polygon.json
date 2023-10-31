@@ -4,8 +4,7 @@
         {
             "name": "AavegotchiDiamond",
             "address": "0x86935f11c86623dec8a25696e1c19a8659cbf95d",
-            "startBlock": 11516320,
-            "isFirstElement": true
+            "startBlock": 11516320
         },
         {
             "name": "RealmDiamond",
@@ -22,8 +21,7 @@
         {
             "name": "WearableDiamond",
             "address": "0x58de9aabcaeec0f69883c94318810ad79cc6a44f",
-            "startBlock": 35999793,
-            "isFirstElement": true
+            "startBlock": 35999793
         }
     ]
 }

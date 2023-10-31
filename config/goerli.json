@@ -4,8 +4,7 @@
         {   
             "name": "AavegotchiDiamond",
             "address": "0x450c91d1fe9f3d57b91218f6ff96f7994eec4d32",
-            "startBlock": 8099655,
-            "isFirstElement": true
+            "startBlock": 8099655
         }
     ]
 }
