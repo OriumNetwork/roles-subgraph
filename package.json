@@ -22,8 +22,7 @@
     "lint:staged": "npx lint-staged"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.55.0",
-    "mustache": "^4.2.0"
+    "@graphprotocol/graph-cli": "^0.55.0"
   },
   "devDependencies": {
     "@graphprotocol/graph-ts": "^0.31.0",
@@ -32,6 +31,7 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "matchstick-as": "^0.5.2",
+    "mustache": "^4.2.0",
     "prettier": "^3.0.2"
   },
   "husky": {

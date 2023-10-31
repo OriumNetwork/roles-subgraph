@@ -2,12 +2,12 @@
     "network": "matic",
     "erc721": [
         {
-            "name": "AavegotchiDiamond",
+            "name": "AavegotchiGotchi",
             "address": "0x86935f11c86623dec8a25696e1c19a8659cbf95d",
             "startBlock": 11516320
         },
         {
-            "name": "RealmDiamond",
+            "name": "AavegotchiParcel",
             "address": "0x1D0360BaC7299C86Ec8E99d0c1C9A95FEfaF2a11",
             "startBlock": 20667840
         },
@@ -19,7 +19,7 @@
     ],
     "erc1155": [
         {
-            "name": "WearableDiamond",
+            "name": "AavegotchiWearable",
             "address": "0x58de9aabcaeec0f69883c94318810ad79cc6a44f",
             "startBlock": 35999793
         }
