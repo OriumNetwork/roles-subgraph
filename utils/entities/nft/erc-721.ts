@@ -1,5 +1,5 @@
-import { NftType } from '../../enums'
 import { Nft } from '../../../generated/schema'
+import { NftType } from '../../enums'
 import { findOrCreateAccount } from '../account'
 import { BigInt } from '@graphprotocol/graph-ts'
 
@@ -14,7 +14,7 @@ export function upsertERC721Nft(tokenAddress: string, tokenId: BigInt, to: strin
     nft = new Nft(nftId)
     nft.tokenId = tokenId
     nft.tokenAddress = tokenAddress
-    nft.type = NftType.ERC721.toString()
+    nft.type = NftType.ERC721
   }
 
   nft.owner = findOrCreateAccount(to).id
