@@ -1,6 +1,6 @@
 {
     "network": "matic",
-    "erc721": [
+    "ERC721": [
         {
             "name": "AavegotchiGotchi",
             "address": "0x86935f11c86623dec8a25696e1c19a8659cbf95d",
@@ -17,7 +17,7 @@
             "startBlock": 36796276
         }
     ],
-    "erc1155": [
+    "ERC1155": [
         {
             "name": "AavegotchiWearable",
             "address": "0x58de9aabcaeec0f69883c94318810ad79cc6a44f",

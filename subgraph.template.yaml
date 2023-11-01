@@ -4,12 +4,7 @@ schema:
 dataSources:
 
 {{#erc721}}
-  {{#isFirstElement}}
-  - name: ERC721
-  {{/isFirstElement}} 
-  {{^isFirstElement}}
   - name: {{name}}
-  {{/isFirstElement}} 
     kind: ethereum
     network: {{network}}
     source:
@@ -33,12 +28,7 @@ dataSources:
 {{/erc721}}
 
 {{#erc1155}}
-  {{#isFirstElement}}
-  - name: ERC1155
-  {{/isFirstElement}} 
-  {{^isFirstElement}}
   - name: {{name}}
-  {{/isFirstElement}} 
     kind: ethereum
     network: {{network}}
     source:

@@ -22,6 +22,7 @@ export function handleTransferBatch(event: TransferBatch): void {
       amounts.length.toString(),
       event.transaction.hash.toHex(),
     ])
+    return
   }
 
   for (let i = 0; i < tokenIds.length; i++) {
