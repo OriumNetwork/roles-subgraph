@@ -14,7 +14,7 @@ export function createMockNft(tokenAddress: string, tokenId: string, ownerAddres
   const nft = new Nft(generateERC721NftId(tokenAddress, BigInt.fromString(tokenId)))
   nft.tokenAddress = tokenAddress
   nft.tokenId = BigInt.fromString(tokenId)
-  nft.type = NftType.ERC721.toString()
+  nft.type = NftType.ERC721
 
   const nftOwner = createMockAccount(ownerAddress)
 

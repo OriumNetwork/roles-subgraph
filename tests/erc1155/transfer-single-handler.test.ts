@@ -28,7 +28,7 @@ describe('ERC-1155 Transfer Single Handler', () => {
       assert.fieldEquals('Nft', _id, 'tokenId', TokenIds[0].toString())
       assert.fieldEquals('Nft', _id, 'owner', Addresses[1])
       assert.fieldEquals('Nft', _id, 'amount', Amounts[0].toString())
-      assert.fieldEquals('Nft', _id, 'type', NftType.ERC1155.toString())
+      assert.fieldEquals('Nft', _id, 'type', NftType.ERC1155)
     })
 
     test('should transfer NFT and create Account when NFT exist Account does not', () => {
@@ -53,7 +53,7 @@ describe('ERC-1155 Transfer Single Handler', () => {
       assert.fieldEquals('Nft', _id, 'tokenId', TokenIds[0].toString())
       assert.fieldEquals('Nft', _id, 'owner', Addresses[1])
       assert.fieldEquals('Nft', _id, 'amount', Amounts[0].toString())
-      assert.fieldEquals('Nft', _id, 'type', NftType.ERC1155.toString())
+      assert.fieldEquals('Nft', _id, 'type', NftType.ERC1155)
     })
   })
   describe('When NFT or Account exists', () => {
@@ -79,7 +79,7 @@ describe('ERC-1155 Transfer Single Handler', () => {
       assert.fieldEquals('Nft', _id, 'tokenId', TokenIds[0].toString())
       assert.fieldEquals('Nft', _id, 'owner', Addresses[1])
       assert.fieldEquals('Nft', _id, 'amount', Amounts[0].toString())
-      assert.fieldEquals('Nft', _id, 'type', NftType.ERC1155.toString())
+      assert.fieldEquals('Nft', _id, 'type', NftType.ERC1155)
     })
 
     test('should transfer NFT and update amount after two transfers', () => {
@@ -98,7 +98,7 @@ describe('ERC-1155 Transfer Single Handler', () => {
       assert.fieldEquals('Nft', _id, 'tokenId', TokenIds[0].toString())
       assert.fieldEquals('Nft', _id, 'owner', Addresses[1])
       assert.fieldEquals('Nft', _id, 'amount', Amounts[1].toString())
-      assert.fieldEquals('Nft', _id, 'type', NftType.ERC1155.toString())
+      assert.fieldEquals('Nft', _id, 'type', NftType.ERC1155)
 
       const event2 = createTransferSingleEvent(
         Addresses[0],
@@ -115,7 +115,7 @@ describe('ERC-1155 Transfer Single Handler', () => {
       assert.fieldEquals('Nft', _id2, 'tokenId', TokenIds[0].toString())
       assert.fieldEquals('Nft', _id2, 'owner', Addresses[2])
       assert.fieldEquals('Nft', _id2, 'amount', Amounts[0].toString())
-      assert.fieldEquals('Nft', _id2, 'type', NftType.ERC1155.toString())
+      assert.fieldEquals('Nft', _id2, 'type', NftType.ERC1155)
     })
   })
 })

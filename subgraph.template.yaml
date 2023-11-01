@@ -3,13 +3,8 @@ schema:
   file: ./schema.graphql
 dataSources:
 
-{{#erc721}}
-  {{#isFirstElement}}
-  - name: ERC721
-  {{/isFirstElement}} 
-  {{^isFirstElement}}
+{{#ERC721}}
   - name: {{name}}
-  {{/isFirstElement}} 
     kind: ethereum
     network: {{network}}
     source:
@@ -30,15 +25,10 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/erc721/index.ts
-{{/erc721}}
+{{/ERC721}}
 
-{{#erc1155}}
-  {{#isFirstElement}}
-  - name: ERC1155
-  {{/isFirstElement}} 
-  {{^isFirstElement}}
+{{#ERC1155}}
   - name: {{name}}
-  {{/isFirstElement}} 
     kind: ethereum
     network: {{network}}
     source:
@@ -61,7 +51,7 @@ dataSources:
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTransferBatch
       file: ./src/erc1155/index.ts
-{{/erc1155}}
+{{/ERC1155}}
 
   - name: ERC7432
     kind: ethereum

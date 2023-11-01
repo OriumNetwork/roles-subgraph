@@ -32,7 +32,7 @@ function replaceFirstElementFlag(data) {
       return {
         [key]: data[key].map((item, index) => {
           if (index === 0) {
-            return { ...item, isFirstElement: true }
+            return { ...item, name: key }
           } else {
             return item
           }
