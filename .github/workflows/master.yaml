@@ -31,8 +31,8 @@ jobs:
         run: npm run deploy:goerli
       - name: Build Mumbai
         run: npm run build:mumbai
-      #      - name: Deploy Mumbai Hosted Service
-      #        run: npm run deploy:mumbai
+      - name: Deploy Mumbai Hosted Service
+        run: npm run deploy:mumbai
       - name: Build Polygon
         run: npm run build:polygon
       - name: Test
