@@ -25,10 +25,6 @@ jobs:
         run: npm run lint
       - name: Subgraph Auth
         run: yarn graph:auth -- ${{ secrets.THEGRAPH_API_KEY }}
-      - name: Build Goerli
-        run: npm run build:goerli
-      - name: Deploy Goerli Hosted Service
-        run: npm run deploy:goerli
       - name: Build Mumbai
         run: npm run build:mumbai
       - name: Deploy Mumbai Hosted Service
