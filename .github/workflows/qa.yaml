@@ -30,7 +30,7 @@ jobs:
       - name: Build Cronos
         run: npm run build:cronos-mainnet
       - name: Deploy Self-hosted Cronos QA
-        run: npx graph deploy --node ${SELF_HOSTED_SUBGRAPH_URL} --version-label qa cronos-mainnet_qa_nft-roles
+        run: npx graph deploy --node ${{ secrets.SELF_HOSTED_SUBGRAPH_URL }} --version-label qa cronos-mainnet_qa_nft-roles
       - name: Build Polygon
         run: npm run build:polygon
       - name: Delete Satsuma Polygon QA
