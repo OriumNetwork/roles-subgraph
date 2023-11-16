@@ -1,0 +1,11 @@
+{
+    "isSelfHosted": true,
+    "network": "cronos-mainnet",
+    "ERC721": [
+        {   
+            "name": "BoredCandyCity",
+            "address": "0xe1049178296ce004996afb16b0816c5a95ac8482",
+            "startBlock": 5203166
+        }
+    ]
+}

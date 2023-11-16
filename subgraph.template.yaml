@@ -58,6 +58,9 @@ dataSources:
     network: {{network}}
     source:
       abi: ERC7432
+{{#isSelfHosted}}
+      startBlock: 1
+{{/isSelfHosted}}
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6

@@ -23,12 +23,16 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GHB_TOKEN }}
       - name: Lint
         run: npm run lint
-      - name: Build Mumbai
-        run: npm run build:mumbai
-      - name: Build Polygon
-        run: npm run build:polygon
       - name: Test
         run: npm run test
+      - name: Build Mumbai
+        run: npm run build:mumbai
+      - name: Build Cronos
+        run: npm run build:cronos
+      - name: Deploy Self-hosted Cronos QA
+        run: npx graph deploy --node ${SELF_HOSTED_SUBGRAPH_URL} --version-label qa cronos-mainnet_qa_nft-roles
+      - name: Build Polygon
+        run: npm run build:polygon
       - name: Delete Satsuma Polygon QA
         run: |
           curl -X DELETE https://subgraphs.alchemy.com/api/subgraphs/8c268d3e8b83112a7d0c732a9b88ba1c732da600bffaf68790171b9a0b5d5394/polygon-roles-registry/qa/delete -H 'x-api-key: ${{ secrets.SATSUMA_DEPLOY_KEY }}'

@@ -23,9 +23,12 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GHB_TOKEN }}
       - name: Lint
         run: npm run lint
-      - name: Build Mumbai
-        run: npm run build:mumbai
-      - name: Build Polygon
-        run: npm run build:polygon
       - name: Test
         run: npm run test
+      - name: Build Mumbai
+        run: npm run build:mumbai
+      - name: Build Cronos
+        run: npm run build:cronos
+      - name: Build Polygon
+        run: npm run build:polygon
+
