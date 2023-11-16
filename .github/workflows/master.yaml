@@ -25,14 +25,14 @@ jobs:
         run: npm run lint
       - name: Subgraph Auth
         run: yarn graph:auth -- ${{ secrets.THEGRAPH_API_KEY }}
-      - name: Build Goerli
-        run: npm run build:goerli
-      - name: Deploy Goerli Hosted Service
-        run: npm run deploy:goerli
       - name: Build Mumbai
         run: npm run build:mumbai
       - name: Deploy Mumbai Hosted Service
         run: npm run deploy:mumbai
+      - name: Build Cronos
+        run: npm run build:cronos-mainnet
+      - name: Deploy Self-hosted Cronos
+        run: npx graph deploy --node ${{ secrets.SELF_HOSTED_SUBGRAPH_URL }} --version-label ${{ github.sha }} cronos-mainnet_prod_nft-roles
       - name: Build Polygon
         run: npm run build:polygon
       - name: Test

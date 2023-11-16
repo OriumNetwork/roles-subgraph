@@ -13,16 +13,16 @@ Get started by installing dependencies, building the project and running the tes
 
 ```shell
 npm ci
-npm run build:goerli
+npm run build:mumbai
 npm test
 ```
 
 ## Build Project
 
 Building subgraphs consist in generating the code and building the project against a manifest file. This repository
-provides a subgraph manifest for each network supported. You can build the project for **Goerli** with the following
+provides a subgraph manifest for each network supported. You can build the project for **Mumbai** with the following
 command:
 
 ```shell
-cp subgraph-goerli.yaml subgraph.yaml && graph codegen subgraph.yaml
+npm run build:mumbai
 ```
