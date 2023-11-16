@@ -28,7 +28,7 @@ jobs:
       - name: Build Mumbai
         run: npm run build:mumbai
       - name: Build Cronos
-        run: npm run build:cronos
+        run: npm run build:cronos-mainnet
       - name: Build Polygon
         run: npm run build:polygon
 

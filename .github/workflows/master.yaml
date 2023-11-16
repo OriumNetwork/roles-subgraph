@@ -30,7 +30,7 @@ jobs:
       - name: Deploy Mumbai Hosted Service
         run: npm run deploy:mumbai
       - name: Build Cronos
-        run: npm run build:cronos
+        run: npm run build:cronos-mainnet
       - name: Deploy Self-hosted Cronos
         run: npx graph deploy --node ${SELF_HOSTED_SUBGRAPH_URL} --version-label ${{ github.sha }} cronos-mainnet_prod_nft-roles
       - name: Build Polygon
