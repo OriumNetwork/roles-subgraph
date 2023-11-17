@@ -5,6 +5,7 @@ export {
   generateERC1155NftId,
   upsertERC1155Nft,
   findOrCreateERC1155Nft,
+  upsertNftCollection,
 } from './nft'
 export { generateRoleAssignmentId, findOrCreateRoleAssignment } from './role-assignment'
 export { generateRoleApprovalId, findOrCreateRoleApproval, deleteRoleApproval } from './role-approval'

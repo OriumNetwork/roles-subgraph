@@ -1,6 +1,6 @@
 import { log } from '@graphprotocol/graph-ts'
 import { TransferSingle } from '../../generated/ERC1155/ERC1155'
-import { upsertERC1155Nft } from '../../utils'
+import { NftType, upsertERC1155Nft, upsertNftCollection } from '../../utils'
 
 /** 
 @dev This handler is called when a token is transferred.
@@ -17,6 +17,7 @@ export function handleTransferSingle(event: TransferSingle): void {
   const amount = event.params.value
 
   const nft = upsertERC1155Nft(tokenAddress, tokenId, amount, fromAddress, toAddress)
+  upsertNftCollection(NftType.ERC1155, tokenAddress, tokenId, fromAddress, toAddress)
 
   log.warning('[erc1155][handleTransferSingle] NFT {} amount {} transferred from {} to {} tx {}', [
     nft.id,

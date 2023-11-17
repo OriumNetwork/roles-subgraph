@@ -1,4 +1,4 @@
-import { assert, describe, test, clearStore, afterEach } from 'matchstick-as'
+import { assert, describe, test, clearStore, afterEach, afterAll } from 'matchstick-as'
 import { NftType, generateERC1155NftId } from '../../utils'
 import { createTransferSingleEvent } from '../helpers/events'
 import { Addresses, Amounts, TokenIds, ZERO_ADDRESS } from '../helpers/contants'
@@ -117,5 +117,31 @@ describe('ERC-1155 Transfer Single Handler', () => {
       assert.fieldEquals('Nft', _id2, 'amount', Amounts[0].toString())
       assert.fieldEquals('Nft', _id2, 'type', NftType.ERC1155)
     })
+  })
+})
+
+describe('ERC-1155 TransferSingle Collection', () => {
+  afterAll(() => {
+    clearStore()
+  })
+
+  test('should create NftCollection when TransferSingle is emitted', () => {
+    assert.entityCount('NftCollection', 0)
+
+    const tokenAddress = ZERO_ADDRESS
+    const event = createTransferSingleEvent(
+      Addresses[0],
+      Addresses[0],
+      Addresses[1],
+      TokenIds[0],
+      Amounts[1],
+      tokenAddress,
+    )
+    handleTransferSingle(event)
+
+    assert.entityCount('NftCollection', 1)
+    assert.fieldEquals('NftCollection', tokenAddress, 'type', NftType.ERC1155)
+    assert.fieldEquals('NftCollection', tokenAddress, 'tokenIdCount', '1')
+    assert.fieldEquals('NftCollection', tokenAddress, 'tokenIds', `[${TokenIds[0]}]`)
   })
 })

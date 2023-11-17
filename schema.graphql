@@ -13,6 +13,13 @@ type Nft @entity {
   roles: [Role!] @derivedFrom(field: "nft")
 }
 
+type NftCollection @entity {
+  id: ID! # tokenAddress
+  type: NftType!
+  tokenIds: [BigInt!]!
+  tokenIdCount: BigInt!
+}
+
 type Account @entity {
   id: ID! # address
   nfts: [Nft!] @derivedFrom(field: "owner")

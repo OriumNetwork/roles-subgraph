@@ -1,27 +1,27 @@
 {
-    "network": "matic",
-    "ERC721": [
-        {
-            "name": "AavegotchiGotchi",
-            "address": "0x86935f11c86623dec8a25696e1c19a8659cbf95d",
-            "startBlock": 11516320
-        },
-        {
-            "name": "AavegotchiParcel",
-            "address": "0x1D0360BaC7299C86Ec8E99d0c1C9A95FEfaF2a11",
-            "startBlock": 20667840
-        },
-        {
-            "name": "ChronosTravaler",
-            "address": "0xa03c4e40d1fcaa826591007a17ca929ef8adbf1c",
-            "startBlock": 36796276
-        }
-    ],
-    "ERC1155": [
-        {
-            "name": "AavegotchiWearable",
-            "address": "0x58de9aabcaeec0f69883c94318810ad79cc6a44f",
-            "startBlock": 35999793
-        }
-    ]
+  "network": "matic",
+  "ERC721": [
+    {
+      "name": "AavegotchiGotchi",
+      "address": "0x86935f11c86623dec8a25696e1c19a8659cbf95d",
+      "startBlock": 11516320
+    },
+    {
+      "name": "AavegotchiParcel",
+      "address": "0x1D0360BaC7299C86Ec8E99d0c1C9A95FEfaF2a11",
+      "startBlock": 20667840
+    },
+    {
+      "name": "ChronosTravaler",
+      "address": "0xa03c4e40d1fcaa826591007a17ca929ef8adbf1c",
+      "startBlock": 36796276
+    }
+  ],
+  "ERC1155": [
+    {
+      "name": "AavegotchiWearable",
+      "address": "0x58de9aabcaeec0f69883c94318810ad79cc6a44f",
+      "startBlock": 35999793
+    }
+  ]
 }

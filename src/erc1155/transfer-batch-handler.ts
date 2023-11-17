@@ -1,6 +1,6 @@
 import { log } from '@graphprotocol/graph-ts'
 import { TransferBatch } from '../../generated/ERC1155/ERC1155'
-import { upsertERC1155Nft } from '../../utils'
+import { NftType, upsertERC1155Nft, upsertNftCollection } from '../../utils'
 
 /** 
 @dev This handler is called when a token is transferred.
@@ -30,6 +30,7 @@ export function handleTransferBatch(event: TransferBatch): void {
     const amount = amounts[i]
 
     const nft = upsertERC1155Nft(tokenAddress, tokenId, amount, fromAddress, toAddress)
+    upsertNftCollection(NftType.ERC1155, tokenAddress, tokenId, fromAddress, toAddress)
 
     log.warning('[erc1155][handleTransferBatch] NFT {} amount {} transferred from {} to {} tx {}', [
       nft.id,
