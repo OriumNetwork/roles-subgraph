@@ -9,7 +9,7 @@ export function handleTransfer(event: Transfer): void {
 
   upsertERC721Nft(tokenAddress, tokenId, accountAddress)
 
-  log.warning('[erc721][handleTransfer] NFT {} transferred from {} to {} tx {}', [
+  log.warning('[erc721][handleTransfer] NFT {} transferred from {} to {} - tx {}', [
     tokenId.toString(),
     event.params.from.toHex(),
     event.params.to.toHex(),
