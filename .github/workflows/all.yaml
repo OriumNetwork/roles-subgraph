@@ -31,4 +31,3 @@ jobs:
         run: npm run build:cronos-mainnet
       - name: Build Polygon
         run: npm run build:polygon
-
