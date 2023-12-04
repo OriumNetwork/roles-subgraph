@@ -1,27 +1,77 @@
 {
-    "network": "matic",
-    "ERC721": [
-        {
-            "name": "AavegotchiGotchi",
-            "address": "0x86935f11c86623dec8a25696e1c19a8659cbf95d",
-            "startBlock": 11516320
-        },
-        {
-            "name": "AavegotchiParcel",
-            "address": "0x1D0360BaC7299C86Ec8E99d0c1C9A95FEfaF2a11",
-            "startBlock": 20667840
-        },
-        {
-            "name": "ChronosTravaler",
-            "address": "0xa03c4e40d1fcaa826591007a17ca929ef8adbf1c",
-            "startBlock": 36796276
-        }
-    ],
-    "ERC1155": [
-        {
-            "name": "AavegotchiWearable",
-            "address": "0x58de9aabcaeec0f69883c94318810ad79cc6a44f",
-            "startBlock": 35999793
-        }
-    ]
+  "network": "matic",
+  "ERC721": [
+    {
+      "name": "AavegotchiGotchi",
+      "address": "0x86935f11c86623dec8a25696e1c19a8659cbf95d",
+      "startBlock": 11516320
+    },
+    {
+      "name": "AavegotchiParcel",
+      "address": "0x1D0360BaC7299C86Ec8E99d0c1C9A95FEfaF2a11",
+      "startBlock": 20667840
+    },
+    {
+      "name": "ChronosTraveler",
+      "address": "0xa03c4e40d1fcaa826591007a17ca929ef8adbf1c",
+      "startBlock": 36796276
+    },
+    {
+      "name": "Arkadians",
+      "address": "0x3c178321f5bc73494046a46b5a065f9211b7c65e",
+      "startBlock": 40518071
+    },
+    {
+      "name": "Rekt Wolf (Arkadia)",
+      "address": "0xf3bddcb3719cd02f574c5837d93ebfd2e90cf31c",
+      "startBlock": 38511163
+    },
+    {
+      "name": "The Herd (Arkadia)",
+      "address": "0x99c1b681305d9aa95465547494d321eecb094bdc",
+      "startBlock": 45625222
+    },
+    {
+      "name": "Ring Runnerz (Arkadia)",
+      "address": "0xdc901017d1c8c9e5745a0a52e3237804da32790c",
+      "startBlock": 44184483
+    },
+    {
+      "name": "Space Skellies (Arkadia)",
+      "address": "0x0ab302a678c1cf97043c1d932968d09d3176e64c",
+      "startBlock": 41453486
+    },
+    {
+      "name": "HellsCatsNFT (Arkadia)",
+      "address": "0x09421f533497331e1075fdca2a16e9ce3f52312b",
+      "startBlock": 32266832
+    },
+    {
+      "name": "Drill Club (Arkadia)",
+      "address": "0x39cd103414106b922eb09c7d45df89608b59e887",
+      "startBlock": 41611488
+    },
+    {
+      "name": "MetaVixens (Arkadia)",
+      "address": "0x023529e7305ac280ee7b536d2007066dcb4d2673",
+      "startBlock": 50488872
+    },
+    {
+      "name": "Grumpies (Arkadia)",
+      "address": "0xb32d51869d97218eb75e55f378205fdf658c37e1",
+      "startBlock": 47172208
+    },
+    {
+      "name": "Danketsu (Arkadia)",
+      "address": "0xee79a3e8aef1109a6ee82bf399ce9e1bd43cf5c4",
+      "startBlock": 46548347
+    }
+  ],
+  "ERC1155": [
+    {
+      "name": "AavegotchiWearable",
+      "address": "0x58de9aabcaeec0f69883c94318810ad79cc6a44f",
+      "startBlock": 35999793
+    }
+  ]
 }

@@ -25,8 +25,8 @@ dataSources:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
       file: ./src/erc721/index.ts
-{{/ERC721}}
 
+{{/ERC721}}
 {{#ERC1155}}
   - name: {{name}}
     kind: ethereum
@@ -51,8 +51,8 @@ dataSources:
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTransferBatch
       file: ./src/erc1155/index.ts
-{{/ERC1155}}
 
+{{/ERC1155}}
   - name: ERC7432
     kind: ethereum
     network: {{network}}
