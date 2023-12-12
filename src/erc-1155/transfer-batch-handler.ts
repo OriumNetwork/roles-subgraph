@@ -17,7 +17,7 @@ export function handleTransferBatch(event: TransferBatch): void {
   const amounts = event.params.values
 
   if (tokenIds.length != amounts.length) {
-    log.error('[erc1155][handleTransferBatch] tokenIds length {} does not match amounts length {}, tx {}', [
+    log.error('[erc-1155][handleTransferBatch] tokenIds length {} does not match amounts length {}, tx {}', [
       tokenIds.length.toString(),
       amounts.length.toString(),
       event.transaction.hash.toHex(),

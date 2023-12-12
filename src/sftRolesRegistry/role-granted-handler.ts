@@ -1,7 +1,7 @@
 import { log } from '@graphprotocol/graph-ts'
-import { RoleGranted } from '../../../generated/ERC7432/ERC7432'
-import { Account, Nft } from '../../../generated/schema'
-import { generateERC721NftId, findOrCreateAccount, findOrCreateRoleAssignment } from '../../../utils'
+import { RoleGranted } from '../../generated/SftRolesRegistry/SftRolesRegistry'
+import { Account, Nft } from '../../generated/schema'
+import { generateERC721NftId, findOrCreateAccount, findOrCreateRoleAssignment } from '../../utils'
 
 export function handleRoleGranted(event: RoleGranted): void {
   const tokenId = event.params._tokenId

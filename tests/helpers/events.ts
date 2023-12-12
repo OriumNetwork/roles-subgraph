@@ -1,137 +1,55 @@
-import { newMockEvent } from 'matchstick-as'
-import { Transfer } from '../../generated/ERC721/ERC721'
 import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts'
-import { RoleGranted, RoleRevoked, RoleApprovalForAll } from '../../generated/ERC7432/ERC7432'
-import { Nft } from '../../generated/schema'
-import { ZERO_ADDRESS } from './contants'
-import { TransferBatch, TransferSingle } from '../../generated/ERC1155/ERC1155'
 
-export function createTransferEvent(from: string, to: string, tokenId: string, address: string): Transfer {
-  const event = changetype<Transfer>(newMockEvent())
-  event.parameters = new Array<ethereum.EventParam>()
-  event.parameters.push(buildEventParamAddress('from', from))
-  event.parameters.push(buildEventParamAddress('to', to))
-  event.parameters.push(buildEventParamUint('tokenId', BigInt.fromString(tokenId)))
-  event.address = Address.fromString(address)
-  return event
-}
-
-export function createTransferSingleEvent(
-  operator: string,
-  from: string,
-  to: string,
-  tokenId: BigInt,
-  amount: BigInt,
-  address: string,
-): TransferSingle {
-  const event = changetype<TransferSingle>(newMockEvent())
-  event.parameters = new Array<ethereum.EventParam>()
-  event.parameters.push(buildEventParamAddress('operator', operator))
-  event.parameters.push(buildEventParamAddress('from', from))
-  event.parameters.push(buildEventParamAddress('to', to))
-  event.parameters.push(buildEventParamUint('id', tokenId))
-  event.parameters.push(buildEventParamUint('value', amount))
-  event.address = Address.fromString(address)
-  return event
-}
-
-export function createTransferBatchEvent(
-  operator: string,
-  from: string,
-  to: string,
-  tokenIds: Array<BigInt>,
-  amounts: Array<BigInt>,
-  address: string,
-): TransferBatch {
-  const event = changetype<TransferBatch>(newMockEvent())
-  event.parameters = new Array<ethereum.EventParam>()
-  event.parameters.push(buildEventParamAddress('operator', operator))
-  event.parameters.push(buildEventParamAddress('from', from))
-  event.parameters.push(buildEventParamAddress('to', to))
-  event.parameters.push(buildEventParamUintArray('ids', tokenIds))
-  event.parameters.push(buildEventParamUintArray('values', amounts))
-  event.address = Address.fromString(address)
-  return event
-}
-
-export function createNewRoleRevokedEvent(
-  roleAssignment: Bytes,
-  nft: Nft,
-  revoker: string,
-  grantee: string,
-): RoleRevoked {
-  const event = changetype<RoleRevoked>(newMockEvent())
-  event.address = Address.fromString(ZERO_ADDRESS)
-  event.parameters = new Array<ethereum.EventParam>()
-  event.parameters.push(buildEventParamBytes('_role', roleAssignment))
-  event.parameters.push(buildEventParamAddress('_tokenAddress', nft.tokenAddress))
-  event.parameters.push(buildEventParamUint('_tokenId', nft.tokenId))
-  event.parameters.push(buildEventParamAddress('_revoker', revoker))
-  event.parameters.push(buildEventParamAddress('_grantee', grantee))
-  return event
-}
-
-export function createNewRoleGrantedEvent(
-  roleAssignment: Bytes,
-  tokenId: string,
-  tokenAddress: string,
-  grantee: string,
-  grantor: string,
-  expirationDate: BigInt,
-  revocable: boolean,
-  data: Bytes,
-): RoleGranted {
-  const event = changetype<RoleGranted>(newMockEvent())
-  event.address = Address.fromString(ZERO_ADDRESS)
-  event.parameters = new Array<ethereum.EventParam>()
-  event.parameters.push(buildEventParamBytes('_role', roleAssignment))
-  event.parameters.push(buildEventParamAddress('_tokenAddress', tokenAddress))
-  event.parameters.push(buildEventParamUint('_tokenId', BigInt.fromString(tokenId)))
-  event.parameters.push(buildEventParamAddress('_grantor', grantor))
-  event.parameters.push(buildEventParamAddress('_grantee', grantee))
-  event.parameters.push(buildEventParamUint('_expirationDate', expirationDate))
-  event.parameters.push(buildEventParamBoolean('_revocable', revocable))
-  event.parameters.push(buildEventParamBytes('_data', data))
-  return event
-}
-
-export function createNewRoleApprovalForAllEvent(
-  grantor: string,
-  operator: string,
-  tokenAddress: string,
-  isApproved: boolean,
-): RoleApprovalForAll {
-  const event = changetype<RoleApprovalForAll>(newMockEvent())
-  event.address = Address.fromString(ZERO_ADDRESS)
-  event.parameters = new Array<ethereum.EventParam>()
-  event.transaction.from = Address.fromString(grantor)
-  event.parameters.push(buildEventParamAddress('_tokenAddress', tokenAddress))
-  event.parameters.push(buildEventParamAddress('_operator', operator))
-  event.parameters.push(buildEventParamBoolean('_isApproved', isApproved))
-  return event
-}
-
-function buildEventParamBoolean(name: string, value: boolean): ethereum.EventParam {
+/**
+ * @dev Build an event parameter of type boolean
+ * @param name The name of the parameter.
+ * @param value A boolean value.
+ * @returns The event parameter.
+ */
+export function buildEventParamBoolean(name: string, value: boolean): ethereum.EventParam {
   const ethAddress = ethereum.Value.fromBoolean(value)
   return new ethereum.EventParam(name, ethAddress)
 }
-
-function buildEventParamAddress(name: string, address: string): ethereum.EventParam {
+/**
+ * @dev Build an event parameter of type address
+ * @param name The name of the parameter.
+ * @param address A string value to be casted to Address.
+ * @returns The event parameter.
+ */
+export function buildEventParamAddress(name: string, address: string): ethereum.EventParam {
   const ethAddress = ethereum.Value.fromAddress(Address.fromString(address))
   return new ethereum.EventParam(name, ethAddress)
 }
 
-function buildEventParamUint(name: string, value: BigInt): ethereum.EventParam {
+/**
+ * @dev Build an event parameter of type positive BigInt
+ * @param name The name of the parameter.
+ * @param value A BigInt value to be casted to UnsignedBigInt.
+ * @returns The event parameter.
+ */
+export function buildEventParamUint(name: string, value: BigInt): ethereum.EventParam {
   const ethValue = ethereum.Value.fromUnsignedBigInt(value)
   return new ethereum.EventParam(name, ethValue)
 }
 
-function buildEventParamUintArray(name: string, value: Array<BigInt>): ethereum.EventParam {
-  const ethValue = ethereum.Value.fromUnsignedBigIntArray(value)
+/**
+ * @dev Build an event parameter of type string
+ * @param name The name of the parameter.
+ * @param value A string value to be casted to Bytes.
+ * @returns The event parameter.
+ */
+export function buildEventParamBytes(name: string, value: Bytes): ethereum.EventParam {
+  const ethValue = ethereum.Value.fromFixedBytes(value)
   return new ethereum.EventParam(name, ethValue)
 }
 
-function buildEventParamBytes(name: string, value: Bytes): ethereum.EventParam {
-  const ethValue = ethereum.Value.fromFixedBytes(value)
+/**
+ * @dev Build an event parameter of type array of UnsignedBigInt
+ * @param name The name of the parameter.
+ * @param value An array of strings to be casted to Array of UnsignedBigInt.
+ * @returns The event parameter.
+ */
+export function buildEventParamUintArray(name: string, value: Array<BigInt>): ethereum.EventParam {
+  const ethValue = ethereum.Value.fromUnsignedBigIntArray(value)
   return new ethereum.EventParam(name, ethValue)
 }

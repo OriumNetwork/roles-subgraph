@@ -1,10 +1,11 @@
 import { assert, describe, test, clearStore, afterEach } from 'matchstick-as'
-import { createNewRoleGrantedEvent } from '../helpers/events'
-import { handleRoleGranted } from '../../src/erc7432'
+import { createNewRoleGrantedEvent } from '../mocks/events'
+import { handleRoleGranted } from '../../src/erc-7432'
 import { Addresses, ZERO_ADDRESS } from '../helpers/contants'
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { createMockAccount, createMockNft, validateRole } from '../helpers/entities'
+import { createMockAccount, createMockNft } from '../mocks/entities'
 import { Account } from '../../generated/schema'
+import { validateRole } from '../helpers/assertion'
 
 const RoleAssignmentId = Bytes.fromUTF8('0xGrantRole')
 const tokenAddress = Addresses[0]
@@ -142,6 +143,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       data,
       event1.address.toHex(),
+      BigInt.zero(),
     )
     validateRole(
       grantorAccount,
@@ -151,6 +153,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       data,
       event2.address.toHex(),
+      BigInt.zero(),
     )
     validateRole(
       grantorAccount,
@@ -160,6 +163,7 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       data,
       event3.address.toHex(),
+      BigInt.zero(),
     )
   })
 
@@ -214,8 +218,66 @@ describe('ERC-7432 RoleGranted Handler', () => {
     assert.entityCount('Account', 3)
 
     const grantorAccount = new Account(grantor)
-    validateRole(grantorAccount, new Account(Addresses[0]), nft1, RoleAssignmentId, expirationDate, data, rolesRegistry)
-    validateRole(grantorAccount, new Account(Addresses[1]), nft2, RoleAssignmentId, expirationDate, data, rolesRegistry)
-    validateRole(grantorAccount, new Account(Addresses[2]), nft3, RoleAssignmentId, expirationDate, data, rolesRegistry)
+    validateRole(
+      grantorAccount,
+      new Account(Addresses[0]),
+      nft1,
+      RoleAssignmentId,
+      expirationDate,
+      data,
+      rolesRegistry,
+      BigInt.zero(),
+    )
+    validateRole(
+      grantorAccount,
+      new Account(Addresses[1]),
+      nft2,
+      RoleAssignmentId,
+      expirationDate,
+      data,
+      rolesRegistry,
+      BigInt.zero(),
+    )
+    validateRole(
+      grantorAccount,
+      new Account(Addresses[2]),
+      nft3,
+      RoleAssignmentId,
+      expirationDate,
+      data,
+      rolesRegistry,
+      BigInt.zero(),
+    )
+  })
+
+  test('should update lastNonRevocableExpirationDate when revocable is false', () => {
+    const nft = createMockNft(tokenAddress, tokenId, grantor)
+    assert.entityCount('RoleAssignment', 0)
+    assert.entityCount('Role', 0)
+    assert.entityCount('Account', 1)
+
+    const event1 = createNewRoleGrantedEvent(
+      RoleAssignmentId,
+      tokenId,
+      tokenAddress,
+      Addresses[0],
+      grantor,
+      expirationDate,
+      false,
+      data,
+    )
+    handleRoleGranted(event1)
+
+    const grantorAccount = new Account(grantor)
+    validateRole(
+      grantorAccount,
+      new Account(Addresses[0]),
+      nft,
+      RoleAssignmentId,
+      expirationDate,
+      data,
+      event1.address.toHex(),
+      expirationDate,
+    )
   })
 })

@@ -1,7 +1,7 @@
 import { log } from '@graphprotocol/graph-ts'
-import { RoleRevoked } from '../../../generated/ERC7432/ERC7432'
-import { Account, Nft, RoleAssignment } from '../../../generated/schema'
-import { findOrCreateRolesRegistry, generateERC721NftId, generateRoleAssignmentId } from '../../../utils'
+import { RoleRevoked } from '../../generated/SftRolesRegistry/SftRolesRegistry'
+import { Account, Nft, RoleAssignment } from '../../generated/schema'
+import { findOrCreateRolesRegistry, generateERC721NftId, generateRoleAssignmentId } from '../../utils'
 
 export function handleRoleRevoked(event: RoleRevoked): void {
   const tokenId = event.params._tokenId

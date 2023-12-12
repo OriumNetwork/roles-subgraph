@@ -24,7 +24,7 @@ dataSources:
       eventHandlers:
         - event: Transfer(indexed address,indexed address,indexed uint256)
           handler: handleTransfer
-      file: ./src/erc721/index.ts
+      file: ./src/erc-721/index.ts
 
 {{/ERC721}}
 {{#ERC1155}}
@@ -50,7 +50,7 @@ dataSources:
           handler: handleTransferSingle
         - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
           handler: handleTransferBatch
-      file: ./src/erc1155/index.ts
+      file: ./src/erc-1155/index.ts
 
 {{/ERC1155}}
   - name: ERC7432
@@ -82,4 +82,35 @@ dataSources:
           handler: handleRoleRevoked
         - event: RoleApprovalForAll(indexed address,indexed address,bool)
           handler: handleRoleApprovalForAll
-      file: ./src/erc7432/index.ts
+      file: ./src/erc-7432/index.ts
+
+  - name: SftRolesRegistry
+    kind: ethereum
+    network: {{network}}
+    source:
+      abi: SftRolesRegistry
+{{#isSelfHosted}}
+      startBlock: 1
+{{/isSelfHosted}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Nft
+        - Account
+        - RoleAssignment
+        - RoleApproval
+      abis:
+        - name: SftRolesRegistry
+          file: ./abis/SftRolesRegistry.json
+      eventHandlers:
+        - event: RoleGranted(indexed uint256,indexed bytes32,address,uint256,uint256,address,address,uint64,bool,bytes)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed uint256,indexed bytes32,address,uint256,uint256,address,address)
+          handler: handleRoleRevoked
+        - event: RoleApprovalForAll(indexed address,indexed address,bool)
+          handler: handleRoleApprovalForAll
+        - event: Withdrew(indexed uint256,indexed address,address,uint256,uint256)
+          handler: handleWithdrew
+      file: ./src/erc-7432/index.ts
