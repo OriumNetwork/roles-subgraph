@@ -53,14 +53,6 @@ export function upsertRoleAssignment(event: RoleGranted, grantor: Account, grant
   roleAssignment.data = event.params._data
   roleAssignment.updatedAt = event.block.timestamp
 
-  if (!roleAssignment.revocable) {
-    // if the role is not revocable, we update the lastNonRevocableExpirationDate
-    // since the grantor will not able to revoke the role before this date
-    // this is useful for the revocation check
-    role.lastNonRevocableExpirationDate = event.params._expirationDate
-    role.save()
-  }
-
   roleAssignment.save()
   return roleAssignment
 }

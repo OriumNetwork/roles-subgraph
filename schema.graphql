@@ -39,7 +39,6 @@ type Role @entity {
   rolesRegistry: RolesRegistry!
   roleHash: Bytes!
   nft: Nft!
-  lastNonRevocableExpirationDate: BigInt!
   roleAssignments: [RoleAssignment!] @derivedFrom(field: "role")
 }
 
@@ -56,13 +55,4 @@ type RolesRegistry @entity {
   id: ID! # contractAddress
   roles: [Role!] @derivedFrom(field: "rolesRegistry")
   roleApprovals: [RoleApproval!] @derivedFrom(field: "rolesRegistry")
-}
-
-# Helper Entities
-
-type HelperNftOwnership @entity {
-  id: ID! # tokenAddress + tokenId + owner
-  nft: Nft!
-  originalOwner: Account!
-  isSameOwner: Boolean!
 }

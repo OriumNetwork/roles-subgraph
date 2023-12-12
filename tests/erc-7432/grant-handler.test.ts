@@ -143,7 +143,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       data,
       event1.address.toHex(),
-      BigInt.zero(),
     )
     validateRole(
       grantorAccount,
@@ -153,7 +152,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       data,
       event2.address.toHex(),
-      BigInt.zero(),
     )
     validateRole(
       grantorAccount,
@@ -163,7 +161,6 @@ describe('ERC-7432 RoleGranted Handler', () => {
       expirationDate,
       data,
       event3.address.toHex(),
-      BigInt.zero(),
     )
   })
 
@@ -218,66 +215,8 @@ describe('ERC-7432 RoleGranted Handler', () => {
     assert.entityCount('Account', 3)
 
     const grantorAccount = new Account(grantor)
-    validateRole(
-      grantorAccount,
-      new Account(Addresses[0]),
-      nft1,
-      RoleAssignmentId,
-      expirationDate,
-      data,
-      rolesRegistry,
-      BigInt.zero(),
-    )
-    validateRole(
-      grantorAccount,
-      new Account(Addresses[1]),
-      nft2,
-      RoleAssignmentId,
-      expirationDate,
-      data,
-      rolesRegistry,
-      BigInt.zero(),
-    )
-    validateRole(
-      grantorAccount,
-      new Account(Addresses[2]),
-      nft3,
-      RoleAssignmentId,
-      expirationDate,
-      data,
-      rolesRegistry,
-      BigInt.zero(),
-    )
-  })
-
-  test('should update lastNonRevocableExpirationDate when revocable is false', () => {
-    const nft = createMockNft(tokenAddress, tokenId, grantor)
-    assert.entityCount('RoleAssignment', 0)
-    assert.entityCount('Role', 0)
-    assert.entityCount('Account', 1)
-
-    const event1 = createNewRoleGrantedEvent(
-      RoleAssignmentId,
-      tokenId,
-      tokenAddress,
-      Addresses[0],
-      grantor,
-      expirationDate,
-      false,
-      data,
-    )
-    handleRoleGranted(event1)
-
-    const grantorAccount = new Account(grantor)
-    validateRole(
-      grantorAccount,
-      new Account(Addresses[0]),
-      nft,
-      RoleAssignmentId,
-      expirationDate,
-      data,
-      event1.address.toHex(),
-      expirationDate,
-    )
+    validateRole(grantorAccount, new Account(Addresses[0]), nft1, RoleAssignmentId, expirationDate, data, rolesRegistry)
+    validateRole(grantorAccount, new Account(Addresses[1]), nft2, RoleAssignmentId, expirationDate, data, rolesRegistry)
+    validateRole(grantorAccount, new Account(Addresses[2]), nft3, RoleAssignmentId, expirationDate, data, rolesRegistry)
   })
 })

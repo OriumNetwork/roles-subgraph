@@ -71,14 +71,6 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   roleAssignment.expirationDate = event.block.timestamp
   roleAssignment.save()
 
-  if (!roleAssignment.revocable) {
-    // smart contract validate that if a role is not revocable, it can only be revoked by the grantee
-    // in that case, we can set the lastNonRevocableExpirationDate to zero, assuming that the grantee is revoking its own role
-    const role = findOrCreateRole(rolesRegistry, nft, event.params._role)
-    role.lastNonRevocableExpirationDate = BigInt.zero()
-    role.save()
-  }
-
   log.warning('[[erc-7432]handleRoleRevoked] Revoked RoleAssignment: {} NFT: {} tx: {}', [
     roleAssignmentId,
     nftId,

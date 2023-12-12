@@ -1,5 +1,5 @@
 import { Transfer } from '../../generated/ERC721/ERC721'
-import { upsertERC721Nft, upsertHelperNftOwnership } from '../../utils'
+import { upsertERC721Nft } from '../../utils'
 import { log } from '@graphprotocol/graph-ts'
 
 /** 
@@ -15,9 +15,7 @@ export function handleTransfer(event: Transfer): void {
   const from = event.params.from.toHex()
   const to = event.params.to.toHex()
 
-  const nft = upsertERC721Nft(tokenAddress, tokenId, to)
-  upsertHelperNftOwnership(nft, from)
-  upsertHelperNftOwnership(nft, to)
+  upsertERC721Nft(tokenAddress, tokenId, to)
 
   log.warning('[erc-721][handleTransfer] NFT {} transferred from {} to {} tx {}', [
     tokenId.toString(),

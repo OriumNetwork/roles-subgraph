@@ -16,13 +16,11 @@ export function validateRole(
   expirationDate: BigInt,
   data: Bytes,
   rolesRegistryAddress: string,
-  lastNonRevocableExpirationDate: BigInt,
 ): void {
   const rolesRegistry = findOrCreateRolesRegistry(rolesRegistryAddress)
   const roleId = generateRoleId(rolesRegistry, nft, roleAssignment)
   assert.fieldEquals('Role', roleId, 'roleHash', roleAssignment.toHex())
   assert.fieldEquals('Role', roleId, 'nft', nft.id)
-  assert.fieldEquals('Role', roleId, 'lastNonRevocableExpirationDate', lastNonRevocableExpirationDate.toString())
 
   const roleAssignmentId = generateRoleAssignmentId(rolesRegistry, grantor, grantee, nft, roleAssignment)
   assert.fieldEquals(

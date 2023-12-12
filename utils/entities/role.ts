@@ -30,7 +30,6 @@ export function findOrCreateRole(rolesRegistry: RolesRegistry, nft: Nft, roleHas
     role.roleHash = roleHash
     role.nft = nft.id
     role.rolesRegistry = rolesRegistry.id
-    role.lastNonRevocableExpirationDate = BigInt.zero()
     role.save()
   }
 

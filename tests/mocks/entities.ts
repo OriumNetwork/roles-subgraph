@@ -42,7 +42,6 @@ export function createMockRoleAssignment(
   role.roleHash = roleHash
   role.nft = nft.id
   role.rolesRegistry = rolesRegistryAddress
-  role.lastNonRevocableExpirationDate = BigInt.zero()
   role.save()
 
   const roleAssignmentId = generateRoleAssignmentId(
