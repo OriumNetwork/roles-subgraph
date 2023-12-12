@@ -4,7 +4,7 @@ import { handleRoleRevoked } from '../../src/erc-7432'
 import { Bytes, BigInt } from '@graphprotocol/graph-ts'
 import { createMockAccount, createMockNft, createMockRoleAssignment } from '../mocks/entities'
 import { Addresses, ONE, TWO, ZERO_ADDRESS } from '../helpers/contants'
-import { findOrCreateRolesRegistry, generateERC721NftId, generateRoleAssignmentId } from '../../utils'
+import { findOrCreateRolesRegistry, generateERC721NftId, generateERC721RoleAssignmentId } from '../../utils'
 import { Account, Nft } from '../../generated/schema'
 import { validateRole } from '../helpers/assertion'
 
@@ -79,7 +79,7 @@ describe('ERC-7432 RoleRevoked Handler', () => {
 
     assert.entityCount('RoleAssignment', 1)
     const registry = findOrCreateRolesRegistry(rolesRegistry)
-    const _id = generateRoleAssignmentId(registry, new Account(revoker), granteeAccount, nft, RoleAssignmentId)
+    const _id = generateERC721RoleAssignmentId(registry, new Account(revoker), granteeAccount, nft, RoleAssignmentId)
     assert.fieldEquals('RoleAssignment', _id, 'expirationDate', '0')
   })
 

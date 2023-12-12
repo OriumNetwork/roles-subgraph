@@ -2,7 +2,7 @@ import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import { Account, Nft, RoleAssignment, RoleApproval, Role } from '../../generated/schema'
 import {
   generateERC721NftId,
-  generateRoleAssignmentId,
+  generateERC721RoleAssignmentId,
   generateRoleApprovalId,
   generateRoleId,
   findOrCreateRolesRegistry,
@@ -44,7 +44,7 @@ export function createMockRoleAssignment(
   role.rolesRegistry = rolesRegistryAddress
   role.save()
 
-  const roleAssignmentId = generateRoleAssignmentId(
+  const roleAssignmentId = generateERC721RoleAssignmentId(
     rolesRegistry,
     new Account(grantor),
     new Account(grantee),
