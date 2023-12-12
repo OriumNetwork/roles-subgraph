@@ -1,7 +1,7 @@
-import { BigInt, log } from '@graphprotocol/graph-ts'
+import { log } from '@graphprotocol/graph-ts'
 import { RoleRevoked } from '../../generated/ERC7432/ERC7432'
 import { Account, Nft, RoleAssignment } from '../../generated/schema'
-import { findOrCreateRole, findOrCreateRolesRegistry, generateERC721NftId, generateRoleAssignmentId } from '../../utils'
+import { findOrCreateRolesRegistry, generateERC721NftId, generateERC721RoleAssignmentId } from '../../utils'
 
 /** 
 @dev This handler is called when a role is revoked.
@@ -51,7 +51,7 @@ export function handleRoleRevoked(event: RoleRevoked): void {
   }
 
   const rolesRegistry = findOrCreateRolesRegistry(event.address.toHex())
-  const roleAssignmentId = generateRoleAssignmentId(rolesRegistry, revoker, grantee, nft, event.params._role)
+  const roleAssignmentId = generateERC721RoleAssignmentId(rolesRegistry, revoker, grantee, nft, event.params._role)
   const roleAssignment = RoleAssignment.load(roleAssignmentId)
   if (!roleAssignment) {
     log.error('[erc-7432][handleRoleRevoked] RoleAssignment {} does not exist, tx {} skipping...', [

@@ -83,3 +83,30 @@ dataSources:
         - event: RoleApprovalForAll(indexed address,indexed address,bool)
           handler: handleRoleApprovalForAll
       file: ./src/erc-7432/index.ts
+
+  - name: SftRolesRegistry
+    kind: ethereum
+    network: {{network}}
+    source:
+      abi: SftRolesRegistry
+{{#isSelfHosted}}
+      startBlock: 1
+{{/isSelfHosted}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Nft
+        - Account
+        - RoleAssignment
+        - RoleApproval
+      abis:
+        - name: SftRolesRegistry
+          file: ./abis/SftRolesRegistry.json
+      eventHandlers:
+        - event: RoleGranted(indexed uint256,indexed bytes32,address,uint256,uint256,address,address,uint64,bool,bytes)
+          handler: handleRoleGranted
+        - event: RoleApprovalForAll(indexed address,indexed address,bool)
+          handler: handleRoleApprovalForAll
+      file: ./src/erc-7432/index.ts

@@ -3,7 +3,7 @@ import { Account, Nft } from '../../generated/schema'
 import {
   findOrCreateRolesRegistry,
   generateRoleApprovalId,
-  generateRoleAssignmentId,
+  generateERC721RoleAssignmentId,
   generateRoleId,
 } from '../../utils'
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
@@ -22,7 +22,7 @@ export function validateRole(
   assert.fieldEquals('Role', roleId, 'roleHash', roleAssignment.toHex())
   assert.fieldEquals('Role', roleId, 'nft', nft.id)
 
-  const roleAssignmentId = generateRoleAssignmentId(rolesRegistry, grantor, grantee, nft, roleAssignment)
+  const roleAssignmentId = generateERC721RoleAssignmentId(rolesRegistry, grantor, grantee, nft, roleAssignment)
   assert.fieldEquals(
     'RoleAssignment',
     roleAssignmentId,

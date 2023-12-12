@@ -1,7 +1,7 @@
 import { log } from '@graphprotocol/graph-ts'
 import { RoleGranted } from '../../generated/ERC7432/ERC7432'
 import { Account, Nft } from '../../generated/schema'
-import { generateERC721NftId, findOrCreateAccount, upsertRoleAssignment } from '../../utils'
+import { generateERC721NftId, findOrCreateAccount, upsertERC721RoleAssignment } from '../../utils'
 
 /** 
 @dev This handler is called when a role is granted.
@@ -52,7 +52,7 @@ export function handleRoleGranted(event: RoleGranted): void {
   }
 
   const granteeAccount = findOrCreateAccount(event.params._grantee.toHex())
-  const roleAssignment = upsertRoleAssignment(event, grantorAccount, granteeAccount, nft)
+  const roleAssignment = upsertERC721RoleAssignment(event, grantorAccount, granteeAccount, nft)
   log.warning('[erc-7432][handleRoleGranted] roleAssignment: {} NFT: {} Tx: {}', [
     roleAssignment.id,
     nftId,

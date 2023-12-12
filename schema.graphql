@@ -22,7 +22,9 @@ type Account @entity {
 }
 
 type RoleAssignment @entity {
-  id: ID! # rolesRegistryAddress + grantorAddress + tokenAddress + tokenId + granteeAddress + roleHash
+  #  id for ERC721: rolesRegistryId + grantorId + nftId + granteeId + roleHash
+  # id for ERC1155: rolesRegistryId + grantorId + nftId + granteeId + roleHash + nonce
+  id: ID! 
   role: Role!
   nft: Nft!
   grantor: Account!
@@ -32,10 +34,12 @@ type RoleAssignment @entity {
   data: Bytes!
   createdAt: BigInt!
   updatedAt: BigInt!
+  nonce: BigInt # only for ERC1155
+  tokenAmount: BigInt # only for ERC1155
 }
 
 type Role @entity {
-  id: ID! # rolesRegistryAddress + tokenAddress + tokenId + roleHash
+  id: ID! # rolesRegistryId + nftId + roleHash
   rolesRegistry: RolesRegistry!
   roleHash: Bytes!
   nft: Nft!
@@ -43,7 +47,7 @@ type Role @entity {
 }
 
 type RoleApproval @entity {
-  id: ID! # rolesRegistryAddress + grantorAddress + operatorAddress + tokenAddress
+  id: ID! # rolesRegistryId + grantorId + operatorId + tokenAddress
   rolesRegistry: RolesRegistry!
   grantor: Account!
   operator: Account!
