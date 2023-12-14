@@ -1,1 +1,1 @@
-export { NftType } from './nft'
+export * from './nft'

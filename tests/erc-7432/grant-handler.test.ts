@@ -1,10 +1,11 @@
 import { assert, describe, test, clearStore, afterEach } from 'matchstick-as'
-import { createNewRoleGrantedEvent } from '../helpers/events'
-import { handleRoleGranted } from '../../src/erc7432'
+import { createNewRoleGrantedEvent } from '../mocks/events'
+import { handleRoleGranted } from '../../src/erc-7432'
 import { Addresses, ZERO_ADDRESS } from '../helpers/contants'
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
-import { createMockAccount, createMockNft, validateRole } from '../helpers/entities'
+import { createMockAccount, createMockNft } from '../mocks/entities'
 import { Account } from '../../generated/schema'
+import { validateRole } from '../helpers/assertion'
 
 const RoleAssignmentId = Bytes.fromUTF8('0xGrantRole')
 const tokenAddress = Addresses[0]

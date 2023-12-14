@@ -1,11 +1,12 @@
 import { assert, describe, test, clearStore, afterEach } from 'matchstick-as'
-import { createNewRoleRevokedEvent } from '../helpers/events'
-import { handleRoleRevoked } from '../../src/erc7432'
+import { createNewRoleRevokedEvent } from '../mocks/events'
+import { handleRoleRevoked } from '../../src/erc-7432'
 import { Bytes, BigInt } from '@graphprotocol/graph-ts'
-import { createMockAccount, createMockNft, createMockRoleAssignment, validateRole } from '../helpers/entities'
+import { createMockAccount, createMockNft, createMockRoleAssignment } from '../mocks/entities'
 import { Addresses, ONE, TWO, ZERO_ADDRESS } from '../helpers/contants'
 import { findOrCreateRolesRegistry, generateERC721NftId, generateRoleAssignmentId } from '../../utils'
 import { Account, Nft } from '../../generated/schema'
+import { validateRole } from '../helpers/assertion'
 
 const tokenId = '123'
 const RoleAssignmentId = Bytes.fromUTF8('0xGrantRole')

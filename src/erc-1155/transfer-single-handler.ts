@@ -18,7 +18,7 @@ export function handleTransferSingle(event: TransferSingle): void {
 
   const nft = upsertERC1155Nft(tokenAddress, tokenId, amount, fromAddress, toAddress)
 
-  log.warning('[erc1155][handleTransferSingle] NFT {} amount {} transferred from {} to {} tx {}', [
+  log.warning('[erc-1155][handleTransferSingle] NFT {} amount {} transferred from {} to {} tx {}', [
     nft.id,
     amount.toString(),
     fromAddress,

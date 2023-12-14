@@ -4,7 +4,7 @@ enum NftType {
 }
 
 type Nft @entity {
-  id: ID! # tokenId + tokenAddress
+  id: ID! # tokenAddress + tokenId
   tokenAddress: String!
   tokenId: BigInt!
   owner: Account!
@@ -22,7 +22,7 @@ type Account @entity {
 }
 
 type RoleAssignment @entity {
-  id: ID! # rolesRegistryAddress + grantorAddress + tokenId + tokenAddress + granteeAddress + roleHash
+  id: ID! # rolesRegistryAddress + grantorAddress + tokenAddress + tokenId + granteeAddress + roleHash
   role: Role!
   nft: Nft!
   grantor: Account!
@@ -35,7 +35,7 @@ type RoleAssignment @entity {
 }
 
 type Role @entity {
-  id: ID! # rolesRegistryAddress + tokenId + tokenAddress + roleHash
+  id: ID! # rolesRegistryAddress + tokenAddress + tokenId + roleHash
   rolesRegistry: RolesRegistry!
   roleHash: Bytes!
   nft: Nft!
@@ -48,6 +48,7 @@ type RoleApproval @entity {
   grantor: Account!
   operator: Account!
   tokenAddress: String!
+  isApproved: Boolean!
 }
 
 type RolesRegistry @entity {

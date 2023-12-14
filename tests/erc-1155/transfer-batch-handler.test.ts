@@ -1,8 +1,8 @@
 import { assert, describe, test, clearStore, afterEach } from 'matchstick-as'
 import { NftType, generateERC1155NftId } from '../../utils'
-import { createTransferBatchEvent } from '../helpers/events'
+import { createTransferBatchEvent } from '../mocks/events'
 import { Addresses, Amounts, TokenIds, ZERO_ADDRESS } from '../helpers/contants'
-import { handleTransferBatch } from '../../src/erc1155'
+import { handleTransferBatch } from '../../src/erc-1155'
 
 describe('ERC-1155 Transfer Batch Handler', () => {
   afterEach(() => {
